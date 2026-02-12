@@ -2,14 +2,24 @@ import { useEffect,useState } from "react"
 import { useAuth } from "@clerk/clerk-react"
 import axios from "axios"
 
+export enum ChannelType{
+  TEXT= "TEXT",
+  AUDIO= "AUDIO",
+  VIDEO= "VIDEO"
+}
+export enum MemberRole {
+  GUEST="GUEST",
+  MODERATOR="MODERATOR",
+  ADMIN="ADMIN"
+}
 export interface Channels{
   id:string;
   name:string;
-  type:string;
+  type: ChannelType;
 }
 export interface Members{
   id:string;
-  role:string;
+  role:MemberRole;
   profileId:string;
   profile:{
     id:string;
@@ -18,11 +28,6 @@ export interface Members{
     imageUrl:string;
     email:string
   }
-}
-export interface ChannelType{
-  TEXT:string;
-  AUDIO:string;
-  VIDEO:string
 }
 export interface ServerDataTypes{
   id:string;

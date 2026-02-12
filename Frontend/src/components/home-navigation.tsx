@@ -12,7 +12,7 @@ export const HomeNavigation=({serverData}:{serverData: Servers[]})=>{
      className="space-y-4 flex flex-col items-center h-full 
      text-white w-full bg-[#1E1F22] py-3" 
     >
-      <HeaderIcon headerImage={"https://images.scalebranding.com/da4e9838-f6d6-46c6-8515-b43166f64c98.png"} 
+      <HeaderIcon headerImage={""} 
         id={"@me"}/>
       <Separator
        className="h-0.5 bg-zinc-700  

@@ -109,9 +109,9 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
          </DropdownMenuItem>
        )}
        {isAdmin && (
-         <DropdownMenuSeparator className="bg-neutral-500"/>
+         <DropdownMenuSeparator className="bg-neutral-400"/>
        )}
-            {isModerator && (
+        {isAdmin && (
          <DropdownMenuItem 
           onClick={()=>onOpen("deleteServer" , {server})}
           className="text-rose-500 h-full w-full px-3 py-2 text-sm cursor-pointer
@@ -125,7 +125,10 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
             <Trash className="text-rose-500 h-4 w-4 ml-auto"/>
          </DropdownMenuItem>
        )}
-        {!isAdmin && (
+       {!isAdmin && isModerator && (
+         <DropdownMenuSeparator className="bg-neutral-400"/>
+       )}
+       {!isAdmin && (
          <DropdownMenuItem
           onClick={()=>onOpen("leaveServer" , {server})} 
           className="text-rose-500 h-full w-full px-3 py-2 text-sm cursor-pointer
