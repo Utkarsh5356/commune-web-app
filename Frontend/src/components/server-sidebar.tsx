@@ -1,14 +1,13 @@
-import { type Profile } from "@/hooks/use-currentProfile";
 import { ChannelType } from "@/hooks/use-server-data";
 import { ServerHeader } from "./server-header";
 import { type ServerData } from "@/hooks/use-server-data";
 import { ScrollArea } from "./ui/scroll-area";
 import { ServerSearch } from "./server-search";
-import { Hash,Mic,ShieldCheck,Video } from "lucide-react";
+import { Hash,Mic,ShieldCheck,User2,Video } from "lucide-react";
 
 interface ServerSidebarProps {
   userServerData: ServerData | null; 
-  profileData: Profile | null
+  profileId: string
 }
 
 const iconMap={
@@ -18,19 +17,20 @@ const iconMap={
 }
 
 const roleIconMap={
-  ["GUEST"]: null,
+  ["GUEST"]: <User2 className="h-4 w-4 mr-2"/>,
   ["MODERATOR"]: <ShieldCheck className="h-4 w-4 mr-2 text-indigo-500"/>,
   ["ADMIN"]: <ShieldCheck className="h-4 w-4  text-rose-500"/>
 }
 
-export const ServerSidebar=({userServerData,profileData}:ServerSidebarProps)=>{
+export const ServerSidebar=({userServerData,profileId}:ServerSidebarProps)=>{
 
   const textChannels=userServerData?.serverData.channels.filter((channel)=>channel.type === ChannelType.TEXT)
   const audioChannels=userServerData?.serverData.channels.filter((channel)=>channel.type === ChannelType.AUDIO)
   const videoChannels=userServerData?.serverData.channels.filter((channel)=>channel.type === ChannelType.VIDEO)
-  const members=userServerData?.serverData.members.filter((member)=>member.profileId !== profileData?.id) 
+  const members=userServerData?.serverData.members.filter((member)=>member.profileId !== profileId) 
   
-  const role=userServerData?.serverData.members.find((member)=>member.profileId === profileData?.id)?.role
+  const role=userServerData?.serverData.members.find((member)=>member.profileId === profileId)?.role
+
   return (
     <div className="flex flex-col h-screen text-white w-60 bg-[#2B2D31]">
       <ServerHeader serverHeaderData={userServerData?.serverData} role={role}/>

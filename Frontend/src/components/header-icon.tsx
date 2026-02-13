@@ -5,8 +5,10 @@ import { ActionTooltip } from "./action-tooltip"
 
 export const HeaderIcon=({headerImage,id}:{headerImage:string,id:string})=>{
  const navigate=useNavigate()
- const {serverId}=useParams()   
+ const {serverId}=useParams() 
+   
  return(
+  <div className="bg-[#1E1F22]">
    <ActionTooltip
       side="right"
       align="center"
@@ -35,5 +37,6 @@ export const HeaderIcon=({headerImage,id}:{headerImage:string,id:string})=>{
       </div>
      </button>
     </ActionTooltip> 
+  </div>  
  )
 }

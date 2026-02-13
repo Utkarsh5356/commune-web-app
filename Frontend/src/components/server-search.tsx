@@ -1,4 +1,4 @@
-import { useState } from "react"; 
+import { useState,useEffect } from "react"; 
 import { Search } from "lucide-react";
 import {
   CommandDialog,
@@ -23,6 +23,17 @@ interface ServerSearchProps{
 
 export const ServerSearch=({data}:ServerSearchProps)=>{
   const [open,setOpen]=useState(false)
+  
+  useEffect(()=>{
+    const down = (e: KeyboardEvent)=>{
+      if(e.key === "k" && (e.metaKey || e.ctrlKey)){
+        e.preventDefault()
+        setOpen((open)=>!open)
+      } 
+    }
+    document.addEventListener("keydown" , down);
+    return ()=>document.removeEventListener("keydown" , down)
+  },[])
 
   return (
     <>
@@ -41,10 +52,10 @@ export const ServerSearch=({data}:ServerSearchProps)=>{
       </p>
       <kbd
        className="pointer-events-none inline-flex h-5 select-none
-       items-center gap-1 rounded border bg-muted px-1.5 font-mono
+       items-center gap-1 rounded  bg-zinc-800 px-1.5 font-mono
        text-[10px] font-medium text-muted-foreground ml-auto"
       >
-        <span className="text-xs w-14">Ctrl + K</span>
+        <span className="text-xs text-zinc-200 w-14">Ctrl + K</span>
       </kbd>
      </button>
      <CommandDialog open={open} onOpenChange={setOpen}>

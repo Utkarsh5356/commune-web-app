@@ -1,8 +1,9 @@
-import { Routes,Route } from "react-router-dom"
+import { Routes,Route,Navigate } from "react-router-dom"
 import {Home} from "./pages/home"
 import {Signup} from "./pages/signup"
 import {Signin} from "./pages/singin"
-import {Channels} from "./pages/channels"
+import { ChannelLayout } from "./pages/channelLayout"
+import {HomeLayout} from "./pages/homeLayout"
 import { ServerPage } from "./pages/serverPage"
 import { InviteCodePage } from "./pages/invite-code-page"
 import { SSOcallback } from "./pages/sso-callback"
@@ -14,8 +15,11 @@ function App() {
       <Route path={"/"} element={<Home/>}/>
       <Route path={"/signup"} element={<Signup/>}/>
       <Route path={"/signin"} element={<Signin/>}/>
-      <Route path={"/channels/@me"} element={<Channels/>}></Route>
-      <Route path={`/channels/:serverId`} element={<ServerPage/>}/>
+      <Route path={"/channels"} element={<ChannelLayout/>}>
+       <Route index element={<Navigate to={"@me"} replace/>}/>
+       <Route path="@me" element={<HomeLayout/>}></Route>
+       <Route path=":serverId" element={<ServerPage/>}/>
+      </Route>
       <Route path={`/invite/:inviteCode`} element={<InviteCodePage/>}/>
       <Route path={"/sso-callback"} element={<SSOcallback/>}></Route>
      </Routes>
