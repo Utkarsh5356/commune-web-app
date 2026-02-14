@@ -1,11 +1,10 @@
 import {Image} from "@unpic/react"
-import { useParams,useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { cn } from "@/lib/utils"
 import { ActionTooltip } from "./action-tooltip"
 
-export const HeaderIcon=({headerImage,id}:{headerImage:string,id:string})=>{
+export const HeaderIcon=({headerImage,id,showHeaderUI}:{headerImage:string,id:string,showHeaderUI:boolean})=>{
  const navigate=useNavigate()
- const {serverId}=useParams() 
    
  return(
   <div className="bg-[#1E1F22]">
@@ -20,12 +19,12 @@ export const HeaderIcon=({headerImage,id}:{headerImage:string,id:string})=>{
      >
       <div className={cn(
         "absolute left-0 bg-white rounded-r-full transition-all w-1",
-        serverId !== id && "group-hover:h-5",
-        serverId === id ? "h-9" : "h-2"
+        !showHeaderUI && "group-hover:h-5",
+        showHeaderUI ? "h-9" : "h-2"
       )} />
        <div className={cn(
          "relative group flex mx-3 h-12 w-12 rounded-3xl group-hover:rounded-2xl transition-all overflow-hidden",
-         serverId === id && "bg-white/10 text-white rounded-2xl"
+         showHeaderUI && "bg-white/10 text-white rounded-2xl"
        )}>
         <Image
          src={headerImage}
