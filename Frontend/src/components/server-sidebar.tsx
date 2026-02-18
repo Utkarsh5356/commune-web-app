@@ -6,7 +6,7 @@ import { ServerSearch } from "./server-search";
 import { Hash,Mic,ShieldCheck,User2,Video } from "lucide-react";
 
 interface ServerSidebarProps {
-  userServerData: ServerData | null; 
+  userServerData: ServerData | undefined; 
   profileId: string
 }
 

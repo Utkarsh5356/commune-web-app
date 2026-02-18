@@ -6,11 +6,11 @@ import Loader from "@/components/ui/loader"
 
 export const ServerPage=()=>{
   const {serverId}=useParams()
-  const {userServerData,userServerDataLoader}=useServerData({serverId})
+  const {data: userServerData,isLoading: userServerDataLoader}=useServerData({serverId})
   const {id}=useOutletContext<{id:string}>()
 
-  const isServerLoading=userServerDataLoader
-  
+  const isServerLoading=!userServerData && userServerDataLoader
+
   return (
    <div>
      <div className="bg-[#343639] flex min-h-screen w-screen text-white h-full">

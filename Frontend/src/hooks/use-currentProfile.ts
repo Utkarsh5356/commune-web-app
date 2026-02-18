@@ -1,5 +1,5 @@
-import { useEffect,useState } from "react";
-import { useAuth } from "@clerk/clerk-react";
+import { useUser,useAuth } from "@clerk/clerk-react";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 export interface Profile {
@@ -14,29 +14,20 @@ interface profileResponse {
 
 export const useCurrentProfile =()=>{
   const { getToken }=useAuth()
-  const [profileData,setProfileData]=useState<Profile | null>(null)
-  const [profileLoader,setProfileLoader]=useState(true)
+  const {user,isLoaded}=useUser()
 
-  useEffect(()=>{  
-    const getCurrentProfile=async()=>{  
-        
-    setProfileLoader(true)
-    try{
-      const token=await getToken()
-      const profile=await axios.get<profileResponse>(`http://localhost:3000/api/v1/profile/data`,{
+  return useQuery({
+    queryKey: ["currentProfile"],
+    enabled: !!user && isLoaded,
+    queryFn: async()=>{
+     const token=await getToken()
+     const profile=await axios.get<profileResponse>(`http://localhost:3000/api/v1/profile/data`,{
         headers:{
           'Authorization':`Bearer ${token}`,
           'Content-Type':'application/json'
         }
       }) 
-      setProfileData(profile.data.user)     
-    }catch(err){
-     console.error(err);
-    }finally{
-      setProfileLoader(false)
+      return profile.data.user
     }
-   }
-   getCurrentProfile()
-  },[getToken])
-  return {profileData,profileLoader} 
+  })
 }

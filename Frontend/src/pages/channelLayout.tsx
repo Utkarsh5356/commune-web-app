@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
+import { useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { useInitiateProfile } from "@/hooks/use-initiateProfile";
 import { useAllServers } from "@/hooks/use-all-servers";
@@ -7,19 +9,27 @@ import { ServerNavigation } from "@/components/server-navigation";
 import Loader from "@/components/ui/loader";
 
 export const ChannelLayout=()=>{ 
-  const {loading}=useInitiateProfile()
-  const {serverData,serverLoader}=useAllServers()
-  const {profileData,profileLoader}=useCurrentProfile()
+  const {user,isLoaded}=useUser()
+  const initiateProfile=useInitiateProfile()
+  const {data: profileData,isLoading: profileLoader}=useCurrentProfile() 
+  const {data: serverData,isLoading: serverLoader}=useAllServers()
   const navigate=useNavigate()
+  
+  useEffect(()=>{
+   if(isLoaded && !user){
+    navigate("/signin")  
+  } 
+  },[user,isLoaded,navigate])
+      
 
-  if(loading || profileLoader || serverLoader){
+  useEffect(()=>{
+    if(!user || !initiateProfile.isIdle) return 
+    initiateProfile.mutate()
+  },[user,initiateProfile.isIdle])
+
+  if(!isLoaded || profileLoader || serverLoader){
     return <div className="bg-[#2b2c2e] h-screen w-screen flex justify-center items-center"><Loader/></div>
   } 
-  
-  if(!profileData){
-    navigate("/signin")
-    return 
-  }
 
   return(
     <div>

@@ -1,5 +1,5 @@
-import { useEffect,useState } from "react"
-import { useAuth } from "@clerk/clerk-react"
+import { useUser,useAuth } from "@clerk/clerk-react"
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios"
 
 
@@ -12,29 +12,20 @@ export interface Servers {
 
 export const useAllServers=()=>{
   const { getToken }=useAuth()
-  const [serverData,setServerData]=useState<Servers[]>([])
-  const [serverLoader,setServerLoader]=useState(true)
-
-  useEffect(()=>{
-    const getservers=async()=>{
-      
-      setServerLoader(true)
-      try{
-        const token=await getToken()
-        const servers=await axios.get<Servers[]>(`http://localhost:3000/api/v1/server/all`,{
-          headers:{
-            'Authorization':`Bearer ${token}`,
-            'Content-Type':'application/json'
-          }
-        })
-        setServerData(servers.data)
-      }catch(err){
-       console.error(err)
-      }finally{
-        setServerLoader(false)
-      }
+  const {user,isLoaded}=useUser()
+  
+  return useQuery({
+    queryKey: ["allServers"],
+    enabled: !!user && isLoaded,
+    queryFn: async()=>{
+      const token=await getToken()
+      const servers=await axios.get<Servers[]>(`http://localhost:3000/api/v1/server/all`,{
+        headers:{
+          'Authorization':`Bearer ${token}`,
+          'Content-Type':'application/json'
+        }
+      })
+      return servers.data
     }
-    getservers()
-  },[getToken])
-  return {serverData,serverLoader}
+  }) 
 }

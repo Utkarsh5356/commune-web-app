@@ -8,7 +8,7 @@ import { HeaderIcon } from "./header-icon"
 import { UserButton } from "@clerk/clerk-react"
 import { type Servers } from "@/hooks/use-all-servers"
 
-export const ServerNavigation=({serverData}:{serverData:Servers[]})=>{
+export const ServerNavigation=({serverData}:{serverData:Servers[] | undefined})=>{
   const [showHeaderUI,setShowHeaderUI]=useState(true)
   const {serverId}=useParams()
   
@@ -28,7 +28,7 @@ export const ServerNavigation=({serverData}:{serverData:Servers[]})=>{
        rounded-md w-10 mx-auto"
       />  
       <ScrollArea className="flex-1 h-50 w-full">
-       {serverData.map((server)=>(
+       {serverData?.map((server)=>(
         <div key={server.id} className="mb-5">
           <div><NavigationItem id={server.id} name={server.name} imageUrl={server.imageUrl}/></div>
         </div>

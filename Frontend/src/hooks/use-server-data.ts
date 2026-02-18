@@ -1,5 +1,5 @@
-import { useEffect,useState } from "react"
 import { useAuth } from "@clerk/clerk-react"
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios"
 
 export enum ChannelType{
@@ -45,16 +45,11 @@ export interface ServerData{
 
 export const useServerData=({serverId}:{serverId:string | undefined})=>{
   const {getToken}=useAuth()
-  const [userServerData,setUserServerData]=useState<ServerData | null>(null)
-  const [userServerDataLoader,setUserServerDataLoader]=useState(true)
   
-  useEffect(()=>{
-   if(!serverId) return 
-   
-   const getServerData=async()=>{
-    try{
-      setUserServerDataLoader(true)
-
+  return useQuery({
+    queryKey: ["userServerData" , serverId],
+    enabled: !!serverId,
+    queryFn: async()=>{
       const token=await getToken()
       const serverData=await axios.get<ServerData>(`http://localhost:3000/api/v1/server/data?serverId=${serverId}`,{
         headers:{
@@ -62,14 +57,7 @@ export const useServerData=({serverId}:{serverId:string | undefined})=>{
           'Content-Type':'application/json'
         }
       })
-      setUserServerData(serverData.data)
-    }catch(err){
-      console.error(err)
-    }finally{
-      setUserServerDataLoader(false)
+      return serverData.data
     }
-   }
-   getServerData()
-  },[serverId,getToken])
-  return {userServerData,userServerDataLoader}
+  })
 }
