@@ -19,8 +19,8 @@ createRoot(document.getElementById('root')!).render(
  <StrictMode>
     <BrowserRouter>
       <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl={"/"} signUpForceRedirectUrl={"/channels/@me"} signInForceRedirectUrl={"/channels/@me"}>
-        <ModalProvider/>
-        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>    
+         <ModalProvider/>
          <App />
        </QueryClientProvider>
       </ClerkProvider> 

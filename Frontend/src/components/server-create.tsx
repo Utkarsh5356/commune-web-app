@@ -1,12 +1,11 @@
 import { useModal } from "store/use-modal-store"
-import { useAuth } from "@clerk/clerk-react"
+import { useServerCreate } from "@/hooks/use-server-create"
 import {useForm} from "react-hook-form"
 import * as z from "zod"
 import {zodResolver} from "@hookform/resolvers/zod"
 import { ImageUpload } from "./imageUpload"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import axios from "axios"
 import {
   Dialog,
   DialogContent,
@@ -30,7 +29,7 @@ const formSchema=z.object({
 })
 
 export const ServerCreate=()=>{
-  const {getToken}=useAuth()
+  const serverCreate=useServerCreate()
   const { isOpen,onClose,type }=useModal() 
   
   const isModalOpen=isOpen && type === "createServer"
@@ -43,26 +42,15 @@ export const ServerCreate=()=>{
     }
   })
 
-  const isLoading = form.formState.isSubmitting
+  const isLoading = serverCreate.isPending
+
+  const onSubmit = (values:z.infer<typeof formSchema>)=>{
+    serverCreate.mutate({values})  
   
-  const onSubmit = async(values:z.infer<typeof formSchema>)=>{
-    try{
-      const token=await getToken()
-      await axios.post("http://localhost:3000/api/v1/server/create",{
-        values
-      },{
-        headers:{
-          'Authorization':`Bearer ${token}`,
-          'Content-Type':'application/json'
-        }
-      })
-      form.reset()
-      onClose()
-      window.location.reload()
-    }catch(err){
-     console.error(err);
-    }
+    form.reset()
+    onClose()
   }
+  
   
   const handleClose = ()=>{
     form.reset()

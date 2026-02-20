@@ -1,4 +1,4 @@
-import { useUser,useAuth } from "@clerk/clerk-react";
+import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -14,11 +14,9 @@ interface profileResponse {
 
 export const useCurrentProfile =()=>{
   const { getToken }=useAuth()
-  const {user,isLoaded}=useUser()
 
   return useQuery({
     queryKey: ["currentProfile"],
-    enabled: !!user && isLoaded,
     queryFn: async()=>{
      const token=await getToken()
      const profile=await axios.get<profileResponse>(`http://localhost:3000/api/v1/profile/data`,{

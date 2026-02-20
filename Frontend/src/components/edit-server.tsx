@@ -66,7 +66,6 @@ export const EditServer=()=>{
       })
       form.reset()
       onClose()
-      window.location.reload()
     }catch(err){
      console.error(err);
     }
