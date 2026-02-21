@@ -1,9 +1,7 @@
-import { useState } from "react"
-import { useAuth } from "@clerk/clerk-react"
+import { useServerDelete } from "@/hooks/use-server-delete"
 import { useModal } from "store/use-modal-store"
 import { Button } from "./ui/button"
 import { useNavigate } from "react-router"
-import axios from "axios"
 import {
   Dialog,
   DialogContent,
@@ -14,30 +12,18 @@ import {
 } from "./ui/dialog"
 
 export const DeleteServerModal=()=>{
-  const {getToken}=useAuth()
+  const serverDelete=useServerDelete()
   const navigate=useNavigate()  
   const { isOpen,onClose,type,data }=useModal() 
   const { server }=data
-  const [isLoading,setIsLoading]=useState(false)
   
   const isModalOpen=isOpen && type === "deleteServer"
   
-  const leave=async()=>{
-   try{
-    setIsLoading(true)
-    const token=await getToken()
-    await axios.delete(`http://localhost:3000/api/v1/server/delete?serverId=${server?.id}`,{
-      headers:{
-       'Authorization':`Bearer ${token}`,
-       'Content-Type':'application/json'
-      }
-    })
+  const deleteServer=()=>{
+    serverDelete.mutate({serverId: server?.id})
+
     onClose()
     navigate("/channels/@me")
-   }catch(err){
-    console.error(err)
-    setIsLoading(false)   
-   }
   }
   
   return (
@@ -58,16 +44,16 @@ export const DeleteServerModal=()=>{
           <DialogFooter className="bg-gray-100 rounded-b-sm -mx-6 -mb-6 px-6 py-4">
             <div className="flex items-center justify-between w-full">
               <Button
-                disabled={isLoading}
+                disabled={serverDelete.isPending}
                 onClick={onClose}
                 variant="ghost"
               >
                 Cancel
               </Button>
               <Button
-                disabled={isLoading}
+                disabled={serverDelete.isPending}
                 variant="primary"
-                onClick={()=>leave()}
+                onClick={()=>deleteServer()}
               >
                 Confirm
               </Button>

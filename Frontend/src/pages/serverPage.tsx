@@ -6,10 +6,10 @@ import Loader from "@/components/ui/loader"
 
 export const ServerPage=()=>{
   const {serverId}=useParams()
-  const {data: userServerData,isLoading: userServerDataLoader}=useServerData({serverId})
+  const {data: userServerData,isLoading: userServerDataLoader,isFetching}=useServerData({serverId})
   const {id}=useOutletContext<{id:string}>()
 
-  const isServerLoading=!userServerData && userServerDataLoader
+  const isServerLoading= userServerDataLoader && !userServerData || isFetching
 
   return (
    <div>

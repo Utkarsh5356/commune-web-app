@@ -1,12 +1,11 @@
 import { useModal } from "store/use-modal-store"
-import { useAuth } from "@clerk/clerk-react"
+import { useServerEdit } from "@/hooks/use-server-edit"
 import {useForm} from "react-hook-form"
 import * as z from "zod"
 import {zodResolver} from "@hookform/resolvers/zod"
 import { ImageUpload } from "./imageUpload"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import axios from "axios"
 import { useEffect } from "react"
 import {
   Dialog,
@@ -30,7 +29,7 @@ const formSchema=z.object({
 })
 
 export const EditServer=()=>{
-  const {getToken}=useAuth()
+  const serverEdit=useServerEdit()
   const { isOpen,onClose,type,data }=useModal() 
   
   const isModalOpen=isOpen && type === "editServer"
@@ -51,24 +50,13 @@ export const EditServer=()=>{
     }
   },[server,form])
 
-  const isLoading = form.formState.isSubmitting
+  const isLoading = serverEdit.isPending
   
-  const onSubmit = async(values:z.infer<typeof formSchema>)=>{
-    try{
-      const token=await getToken()
-      await axios.patch(`http://localhost:3000/api/v1/server/customize?serverId=${server?.id}`,{
-        values
-      },{
-        headers:{
-          'Authorization':`Bearer ${token}`,
-          'Content-Type':'application/json'
-        }
-      })
-      form.reset()
-      onClose()
-    }catch(err){
-     console.error(err);
-    }
+  const onSubmit = (values:z.infer<typeof formSchema>)=>{
+    serverEdit.mutate({values,serverId:server?.id})
+
+    form.reset()
+    onClose()
   }
   
   const handleClose = ()=>{

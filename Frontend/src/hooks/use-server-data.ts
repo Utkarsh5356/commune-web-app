@@ -45,10 +45,10 @@ export interface ServerData{
 
 export const useServerData=({serverId}:{serverId:string | undefined})=>{
   const {getToken}=useAuth()
-  
   return useQuery({
     queryKey: ["userServerData" , serverId],
     enabled: !!serverId,
+    placeholderData: (prev) => prev,
     queryFn: async()=>{
       const token=await getToken()
       const serverData=await axios.get<ServerData>(`http://localhost:3000/api/v1/server/data?serverId=${serverId}`,{
