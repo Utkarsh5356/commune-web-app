@@ -1,9 +1,7 @@
-import { useState } from "react"
-import { useAuth } from "@clerk/clerk-react"
+import { useServerLeave } from "@/hooks/use-server-leave"
 import { useModal } from "store/use-modal-store"
 import { Button } from "./ui/button"
 import { useNavigate } from "react-router"
-import axios from "axios"
 import {
   Dialog,
   DialogContent,
@@ -14,30 +12,18 @@ import {
 } from "./ui/dialog"
 
 export const LeaveServerModal=()=>{
-  const {getToken}=useAuth()
+  const serverLeave=useServerLeave()
   const navigate=useNavigate()  
   const { isOpen,onClose,type,data }=useModal() 
   const { server }=data
-  const [isLoading,setIsLoading]=useState(false)
   
   const isModalOpen=isOpen && type === "leaveServer"
   
   const leave=async()=>{
-   try{
-    setIsLoading(true)
-    const token=await getToken()
-    await axios.patch(`http://localhost:3000/api/v1/server/leave?serverId=${server?.id}`,{undefined},{
-      headers:{
-        "Authorization":`Bearer ${token}`,
-        'Content-Type':'application/json'
-      }
-    })
+    serverLeave.mutate({serverId: server?.id})
+
     onClose()
     navigate("/channels/@me")
-   }catch(err){
-    console.error(err)
-    setIsLoading(false)   
-   }
   }
   
   return (
@@ -57,14 +43,14 @@ export const LeaveServerModal=()=>{
           <DialogFooter className="bg-gray-100 rounded-b-sm -mx-6 -mb-6 px-6 py-4">
             <div className="flex items-center justify-between w-full">
               <Button
-                disabled={isLoading}
+                disabled={serverLeave.isPending}
                 onClick={onClose}
                 variant="ghost"
               >
                 Cancel
               </Button>
               <Button
-                disabled={isLoading}
+                disabled={serverLeave.isPending}
                 variant="primary"
                 onClick={()=>leave()}
               >
