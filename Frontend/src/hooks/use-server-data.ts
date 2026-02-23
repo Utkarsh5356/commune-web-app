@@ -16,6 +16,8 @@ export interface Channels{
   id:string;
   name:string;
   type: ChannelType;
+  profileId: string;
+  serverId: string
 }
 export interface Members{
   id:string;
