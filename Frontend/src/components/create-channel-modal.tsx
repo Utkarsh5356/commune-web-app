@@ -1,11 +1,10 @@
+import { useChannelCreate } from "@/hooks/use-server-channel-create"
 import { useModal } from "store/use-modal-store"
-import { useAuth } from "@clerk/clerk-react"
 import {useForm} from "react-hook-form"
 import * as z from "zod"
 import {zodResolver} from "@hookform/resolvers/zod"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import axios from "axios"
 import {
   Dialog,
   DialogContent,
@@ -46,7 +45,7 @@ const formSchema=z.object({
 })
 
 export const CreateChannelModal=()=>{
-  const {getToken}=useAuth()
+  const channelCreate=useChannelCreate()
   const { isOpen,onClose,type,data }=useModal() 
   const {server}=data
   const isModalOpen=isOpen && type === "createChannel"
@@ -59,24 +58,13 @@ export const CreateChannelModal=()=>{
     }
   })
 
-  const isLoading = form.formState.isSubmitting
-  
+  const isLoading = channelCreate.isPending
+
   const onSubmit = async(values:z.infer<typeof formSchema>)=>{
-    try{
-      const token=await getToken()
-      await axios.post(`http://localhost:3000/api/v1/channel/create?serverId=${server?.id}`,{
-        values
-      },{
-        headers:{
-         'Authorization':`Bearer ${token}`,
-         'Content-Type':'application/json'
-        }
-      })
-      form.reset()
-      onClose()
-    }catch(err){
-     console.error(err);
-    }
+    channelCreate.mutate({values,serverId: server?.id})
+
+    form.reset()
+    onClose()
   }
   
   const handleClose = ()=>{

@@ -55,7 +55,7 @@ export const ServerSearch=({data}:ServerSearchProps)=>{
       items-center gap-x-2 w-full hover:bg-zinc-700/40
       transition cursor-pointer"
      >
-      <Search className="w-4 h-4 text-zinc-400 group-hover:text-zinc-200 transition"/>
+      <Search className="w-4 h-6 text-zinc-400 group-hover:text-zinc-200 transition"/>
       <p
        className="font-semibold text-sm text-zinc-400
        group-hover:text-zinc-200 transition"
