@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue 
 } from "./ui/select" 
+import { useEffect } from "react"
 
 const ChannelType={
   text:"TEXT",
@@ -49,7 +50,8 @@ export const CreateChannelModal=()=>{
   const { isOpen,onClose,type,data }=useModal() 
   const {server}=data
   const isModalOpen=isOpen && type === "createChannel"
-
+  const { channelType }=data
+   
   const form=useForm({
     resolver:zodResolver(formSchema),
     defaultValues:{
@@ -57,6 +59,14 @@ export const CreateChannelModal=()=>{
       type:ChannelType.text
     }
   })
+
+  useEffect(()=>{
+   if(channelType) {
+    form.setValue("type" , channelType)
+   }else {
+    form.setValue("type", ChannelType.text)
+   }
+  },[channelType,form])
 
   const isLoading = channelCreate.isPending
 

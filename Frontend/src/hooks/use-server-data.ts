@@ -25,7 +25,6 @@ export interface Members{
   profileId:string;
   profile:{
     id:string;
-    userId:string;
     name:string;
     imageUrl:string;
     email:string

@@ -33,15 +33,9 @@ profile.post("/upsert",async (req:Request,res:Response)=>{
       name:data.name,
       imageUrl:data.imageUrl,
       email:data.email
-     },
-     select:{
-      name:true,
-      imageUrl:true,
-      email:true
      }
    })
    if(!user) return res.status(403).json({err:"invalid inputs"})
-   res.json({user})
 }catch(err){
  return res.status(500).json("Internal Error")
 } 

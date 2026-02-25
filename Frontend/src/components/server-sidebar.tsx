@@ -38,7 +38,7 @@ export const ServerSidebar=({userServerData,profileId}:ServerSidebarProps)=>{
   return (
     <div className="flex flex-col h-screen text-white w-60 bg-[#2B2D31]">
       <ServerHeader serverHeaderData={userServerData?.serverData} role={role}/>
-       <div className="-mb-2">
+       <div className="mx-2 -mb-2">
          <ServerSearch 
             data={[
               {
@@ -94,7 +94,7 @@ export const ServerSidebar=({userServerData,profileId}:ServerSidebarProps)=>{
                 key={channel.id}
                 channel={channel}
                 role={role}
-                server={userServerData}
+                server={userServerData?.serverData}
               />
              ))}
            </div>
@@ -115,7 +115,7 @@ export const ServerSidebar=({userServerData,profileId}:ServerSidebarProps)=>{
                 key={channel.id}
                 channel={channel}
                 role={role}
-                server={userServerData}
+                server={userServerData?.serverData}
               />
              ))}
            </div>
@@ -136,7 +136,7 @@ export const ServerSidebar=({userServerData,profileId}:ServerSidebarProps)=>{
                 key={channel.id}
                 channel={channel}
                 role={role}
-                server={userServerData}
+                server={userServerData?.serverData}
               />
              ))}
            </div>
@@ -153,7 +153,9 @@ export const ServerSidebar=({userServerData,profileId}:ServerSidebarProps)=>{
            <div className="space-y-0.5">
              {members.map((member)=>(
               <ServerMember
-                
+                key={member.id}
+                member={member}
+                server={userServerData?.serverData}
               />
              ))}
            </div>
