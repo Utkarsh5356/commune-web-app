@@ -32,7 +32,8 @@ interface ServerHeaderProps {
 }
 
 export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
-  const [server,setServer]=useState(serverHeaderData)
+  // const [server,setServer]=useState(serverHeaderData)
+  const server=serverHeaderData
   const { onOpen } = useModal()
   const isAdmin = role === "ADMIN"
   const isModerator = isAdmin || role === "MODERATOR"
@@ -45,7 +46,7 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
          className="w-full text-md font-semibold px-3 cursor-pointer flex items-center
           h-12 border-neutral-600 border-b-2 hover:bg-zinc-700/50 transition"
         >
-          {server?.name}
+          {serverHeaderData?.name}
           <ChevronDown className="h-5 w-5 ml-auto"/>
         </button>
       </DropdownMenuTrigger>
@@ -82,7 +83,7 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
        )}
        {isAdmin && (
          <DropdownMenuItem 
-          onClick={()=>onOpen("members" , {server,setServer})}
+          onClick={()=>onOpen("members" , {server})}
           className="text-white h-full w-full px-3 py-2 text-sm cursor-pointer
           hover:bg-neutral-700 hover:text-neutral-300
           focus:bg-neutral-700 focus:text-neutral-300

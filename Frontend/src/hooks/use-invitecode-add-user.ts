@@ -1,38 +1,23 @@
-import { useEffect,useState } from "react"
+import { useQueryClient,useMutation } from "@tanstack/react-query"
 import { useAuth } from "@clerk/clerk-react"
 import axios from "axios"
 
-export const useInviteCodeUser=({inviteCode}:{inviteCode:string | undefined})=>{
-  const {getToken}=useAuth()
-  const [inviteCodeUserData,setInviteCodeUserData]=useState<any>()  
-  const [loading,isLoading]=useState(true)
+export const useInviteCodeUser=()=>{
+  const {getToken}=useAuth() 
+  const queryClient=useQueryClient()
 
-  useEffect(()=>{
-   if(!inviteCode){
-    isLoading(false)
-    return 
-   } 
-
-   const addUserInServer=async()=>{
-     isLoading(true)
-     try{
-      const token=await getToken()    
-      const response=await axios.put("http://localhost:3000/api/v1/server/invitecode-add-user",{
-       inviteCode
-     },{
-      headers:{
-        'Authorization':`Bearer ${token}`,
-        'Content-Type':'application/json'
+  return  useMutation({
+      mutationFn: async({inviteCode}:{inviteCode:string | undefined})=>{
+        const token=await getToken()
+        const inviteCodeUserData = await axios.put("http://localhost:3000/api/v1/server/invitecode-add-user",{
+          inviteCode
+        },{
+        headers:{
+         'Authorization':`Bearer ${token}`,
+         'Content-Type':'application/json'
+        }
+       })
+        return inviteCodeUserData.data
       }
-     })
-      setInviteCodeUserData(response.data)
-     }catch(err){
-      console.error(err)
-     }finally{
-      isLoading(false)
-     }
-   }
-    addUserInServer()
-  ,[inviteCode,getToken]})
-  return {inviteCodeUserData,loading}
+    })
 }

@@ -1,13 +1,11 @@
+import { useMemberDelete } from "@/hooks/use-member-delete"
+import { useMemberRoleChange } from "@/hooks/use-member-rolechange"
 import { useModal } from "store/use-modal-store"
-import { useAuth } from "@clerk/clerk-react"
 import { useState } from "react"
 import { ScrollArea } from "./ui/scroll-area"
 import { UserAvatar } from "./user-avatar"
-import axios from "axios"
 import { 
-  Shield,
   ShieldCheck,
-  ShieldAlert,
   MoreVertical,
   ShieldQuestion,
   User2,
@@ -41,9 +39,10 @@ const roleIconMap=(role:string)=>{
 }
 
 export const MembersModal=()=>{
-  const { getToken }=useAuth()
+  const memberDelete=useMemberDelete()
+  const memberRoleChange=useMemberRoleChange()
   const { onOpen,isOpen,onClose,type,data }=useModal()
-  const { server,setServer }=data
+  const { server }=data
   const [loadingId,setLoadingId]=useState("") 
 
   const isModalOpen=isOpen && type === "members"
@@ -52,16 +51,8 @@ export const MembersModal=()=>{
   const onKick=async(memberId:string)=>{
     try{
       setLoadingId(memberId)
-      const token=await getToken()
-      const response=await axios.delete(`http://localhost:3000/api/v1/member/delete?serverId=${server?.id}`,{
-        headers:{
-         'Authorization':`Bearer ${token}`,
-         'memberId':memberId,
-         'Content-Type':'application/json'
-        }
-      })
-      setServer?.(response.data)
-      onOpen("members" , {server:response.data})
+      memberDelete.mutate({memberId,serverId: server?.id})
+      onOpen("members" , {server: memberDelete.data})
     }catch(err){
       console.error(err)
     }finally{
@@ -72,18 +63,8 @@ export const MembersModal=()=>{
   const onRoleChange=async(memberId:string,role:string)=>{
     try{
      setLoadingId(memberId)
-     const token=await getToken()
-     const response=await axios.patch(`http://localhost:3000/api/v1/member/role-change?serverId=${server?.id}`,
-      {role},{
-        headers:{
-          'Authorization':`Bearer ${token}`,
-          'memberId':memberId,
-          'Content-Type':'application/json'
-        }
-      }
-    )
-     setServer?.(response.data)
-     onOpen("members" , {server: response.data})
+     memberRoleChange.mutate({role,memberId,serverId: server?.id})
+     onOpen("members" , {server: memberRoleChange.data})
     }catch(err){
      console.error(err)
     }finally{

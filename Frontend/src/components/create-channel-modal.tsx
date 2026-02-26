@@ -1,4 +1,4 @@
-import { useChannelCreate } from "@/hooks/use-server-channel-create"
+import { useChannelCreate } from "@/hooks/use-channel-create"
 import { useModal } from "store/use-modal-store"
 import {useForm} from "react-hook-form"
 import * as z from "zod"
