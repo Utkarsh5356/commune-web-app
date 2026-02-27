@@ -62,7 +62,8 @@ model Member {
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
+  
+  @@unique([profileId,serverId])
   @@index([profileId])
   @@index([serverId])
 }

@@ -225,29 +225,26 @@ server.put("/invitecode-add-user",async(req:Request,res:Response)=>{
     
    if(!profile) return res.status(500).json("Internal error")
 
-   const server=await db.server.findFirst({
+   const server=await db.server.findUnique({
      where:{
        inviteCode:inviteCode
      }
     })
     if(!server) return res.status(404).json("Invalid invite code")  
     
-    const existingMember=await db.member.findFirst({
-      where:{
-        serverId:server.id,
-        profileId:profile.id
+    try{
+      await db.member.create({
+         data:{
+           serverId:server.id,
+           profileId:profile.id
+         }
+      })
+    }catch(err: any){
+      if (err.code !== "P2002") {
+        throw err
       }
-    })
-    
-    if(existingMember) return res.json(server)
-    
-    await db.member.create({
-      data:{
-        serverId:server.id,
-        profileId:profile.id
-      }
-    })
-    
+    }
+      
     return res.json(server) 
   }catch(err){
     return res.status(500).json("Internal Error")
