@@ -1,4 +1,4 @@
-import { useChannelCreate } from "@/hooks/use-channel-create"
+import { useChannelEdit } from "@/hooks/use-channel-edit"
 import { useModal } from "store/use-modal-store"
 import {useForm} from "react-hook-form"
 import * as z from "zod"
@@ -45,11 +45,11 @@ const formSchema=z.object({
   type: z.string()
 })
 
-export const CreateChannelModal=()=>{
-  const channelCreate=useChannelCreate()
+export const EditChannelModal=()=>{
+  const channelEdit=useChannelEdit()
   const { isOpen,onClose,type,data }=useModal() 
-  const {server,channelType}=data
-  const isModalOpen=isOpen && type === "createChannel"
+  const {server,channel}=data
+  const isModalOpen=isOpen && type === "editChannel"
    
   const form=useForm({
     resolver:zodResolver(formSchema),
@@ -60,19 +60,18 @@ export const CreateChannelModal=()=>{
   })
 
   useEffect(()=>{
-   if(channelType) {
-    form.setValue("type" , channelType)
-   }else {
-    form.setValue("type", ChannelType.text)
+   if (channel) {
+    form.setValue("name", channel.name)
+    form.setValue("type", channel.type)
    }
-  },[channelType,form])
+  },[form,channel])
 
-  const isLoading = channelCreate.isPending
+  const isLoading = channelEdit.isPending
 
   const onSubmit = async(values:z.infer<typeof formSchema>)=>{
-    const create=await channelCreate.mutateAsync({values,serverId: server?.id})
+    const edit=await channelEdit.mutateAsync({values,channelId: channel?.id,serverId: server?.id})
     form.reset()
-    if(create) onClose()
+    if(edit) onClose()
   }
   
   const handleClose = ()=>{
@@ -85,7 +84,7 @@ export const CreateChannelModal=()=>{
       <Dialog open={isModalOpen} onOpenChange={handleClose}>
        <DialogContent className="sm:max-w-106.25">
          <DialogHeader>
-            <DialogTitle className="text-center text-2xl font-bold">Create Channel</DialogTitle>
+            <DialogTitle className="text-center text-2xl font-bold">Edit Channel</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} 
@@ -151,7 +150,7 @@ export const CreateChannelModal=()=>{
                 />
               </div>
               <DialogFooter className="px-6">
-                <Button variant="primary" type="submit" disabled={isLoading}>Create</Button>
+                <Button variant="primary" type="submit" disabled={isLoading}>Save</Button>
               </DialogFooter>
            </form>
           </Form>

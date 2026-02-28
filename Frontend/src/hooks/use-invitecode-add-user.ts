@@ -1,10 +1,9 @@
-import { useQueryClient,useMutation } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { useAuth } from "@clerk/clerk-react"
 import axios from "axios"
 
 export const useInviteCodeUser=()=>{
   const {getToken}=useAuth() 
-  const queryClient=useQueryClient()
 
   return  useMutation({
       mutationFn: async({inviteCode}:{inviteCode:string | undefined})=>{

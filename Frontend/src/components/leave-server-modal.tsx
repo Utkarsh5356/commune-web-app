@@ -20,9 +20,9 @@ export const LeaveServerModal=()=>{
   const isModalOpen=isOpen && type === "leaveServer"
   
   const leave=async()=>{
-    serverLeave.mutate({serverId: server?.id})
+    const leave = await serverLeave.mutateAsync({serverId: server?.id})
 
-    onClose()
+    if(leave) onClose()
     navigate("/channels/@me")
   }
   

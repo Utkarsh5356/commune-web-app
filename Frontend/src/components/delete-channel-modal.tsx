@@ -1,7 +1,6 @@
 import { useChannelDelete } from "@/hooks/use-channel-delete"
 import { useModal } from "store/use-modal-store"
 import { Button } from "./ui/button"
-import { useNavigate } from "react-router"
 import {
   Dialog,
   DialogContent,
@@ -13,17 +12,15 @@ import {
 
 export const DeleteChannelModal=()=>{
   const channelDelete=useChannelDelete()  
-  const navigate=useNavigate()  
   const { isOpen,onClose,type,data }=useModal() 
   const { server,channel }=data
   
   const isModalOpen=isOpen && type === "deleteChannel"
   
-  const deleteChannel=()=>{
-    channelDelete.mutate({channelId: channel?.id,serverId: server?.id})
+  const deleteChannel=async()=>{
+    const deleteChannel=await channelDelete.mutateAsync({channelId: channel?.id,serverId: server?.id})
 
-    onClose()
-    navigate(`/channels/${server?.id}`)
+    if(deleteChannel) onClose()
   }
   
   return (

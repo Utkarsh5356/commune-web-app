@@ -44,10 +44,10 @@ export const ServerCreate=()=>{
 
   const isLoading = serverCreate.isPending
 
-  const onSubmit = (values:z.infer<typeof formSchema>)=>{
-    serverCreate.mutate({values})  
+  const onSubmit = async(values:z.infer<typeof formSchema>)=>{
+    const create=await serverCreate.mutateAsync({values})  
   
-    form.reset()
+    if(create) form.reset()
     onClose()
   }
   

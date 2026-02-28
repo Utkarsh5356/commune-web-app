@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { type Members } from "@/hooks/use-server-data"
 import { useModal } from "store/use-modal-store";
 import { 
@@ -32,7 +31,6 @@ interface ServerHeaderProps {
 }
 
 export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
-  // const [server,setServer]=useState(serverHeaderData)
   const server=serverHeaderData
   const { onOpen } = useModal()
   const isAdmin = role === "ADMIN"

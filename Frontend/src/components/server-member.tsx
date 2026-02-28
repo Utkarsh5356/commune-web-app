@@ -17,36 +17,74 @@ const roleIconMap = {
   [MemberRole.ADMIN] : <ShieldCheck className="h-4 w-4 ml-2 text-rose-500"/>
 }
 
-export const ServerMember=({
+export const ServerMember = ({
   member,
   server
-}: ServerMemberProps)=>{
-  
-  const {memberId,channelId}=useParams()
-  const navigate=useNavigate()
-  
-  const icon = roleIconMap[member.role]
+}: ServerMemberProps) => {
+  const { memberId,channelId } = useParams();
+  const navigate = useNavigate();
+  const icon = roleIconMap[member.role];
+
+  const Ticker = () => {
+    return (
+      <>
+        <style>{`
+          @keyframes smoothTicker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+          }
+          .ticker-wrapper {
+            display: flex;
+            width: fit-content;
+            will-change: transform;
+            animation: smoothTicker 10s linear infinite;
+          }
+          .group:hover .ticker-wrapper {
+            animation-play-state: paused;
+          }
+        `}</style>
+        
+        <div className="w-30 overflow-hidden ml-2">
+          <div className="ticker-wrapper">
+            <span className={cn(
+               "whitespace-nowrap font-semibold text-sm text-zinc-400 group-hover:text-zinc-200 pr-12",
+                channelId === member.id && "text-zinc-200 group-hover:text-white",
+                memberId === member.id && "text-zinc-200"
+            )}>
+              {member.profile.name}
+            </span>
+            <span className={cn(
+               "whitespace-nowrap font-semibold text-sm text-zinc-400 group-hover:text-zinc-200 pr-12",
+                channelId === member.id && "text-zinc-200 group-hover:text-white",
+                memberId === member.id && "text-zinc-200"
+            )}>
+              {member.profile.name}
+            </span>
+          </div>
+        </div>
+      </>
+    );
+  };
 
   return (
     <button
       className={cn(
-        "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/50 transition mb-1 cursor-pointer",
+        "group px-2 py-2 rounded-md flex items-center w-full hover:bg-zinc-700/50 transition mb-1",
         memberId === member.id && "bg-zinc-700"
       )}
     >
-     <UserAvatar 
-       src={member.profile.imageUrl}
-       className="h-8 w-8 md:h-8 md:w-8"
-     />
-     <p 
-      className={cn(
-        "font-semibold text-sm text-zinc-400 group-hover:text-zinc-200 transition",
-        channelId === member.id && "text-zinc-200 group-hover:text-white"
-      )}
-     >
-      {member.profile.name}
-     </p>
-     {icon}
+      <div className="shrink-0">
+        <UserAvatar 
+          src={member.profile.imageUrl}
+          className="h-8 w-8" 
+        />
+      </div>
+      
+      <Ticker/>
+
+      <div className="shrink-0 ml-auto">
+        {icon}
+      </div>
     </button>
-  )  
+  );
 }

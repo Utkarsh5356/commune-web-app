@@ -19,10 +19,10 @@ export const DeleteServerModal=()=>{
   
   const isModalOpen=isOpen && type === "deleteServer"
   
-  const deleteServer=()=>{
-    serverDelete.mutate({serverId: server?.id})
+  const deleteServer=async()=>{
+    const deleteServer=await serverDelete.mutateAsync({serverId: server?.id})
 
-    onClose()
+    if(deleteServer) onClose()
     navigate("/channels/@me")
   }
   

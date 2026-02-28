@@ -41,7 +41,7 @@ const roleIconMap=(role:string)=>{
 export const MembersModal=()=>{
   const memberDelete=useMemberDelete()
   const memberRoleChange=useMemberRoleChange()
-  const { onOpen,isOpen,onClose,type,data }=useModal()
+  const { isOpen,onClose,type,data }=useModal()
   const { server }=data
   const [loadingId,setLoadingId]=useState("") 
 
@@ -51,8 +51,11 @@ export const MembersModal=()=>{
   const onKick=async(memberId:string)=>{
     try{
       setLoadingId(memberId)
-      memberDelete.mutate({memberId,serverId: server?.id})
-      onOpen("members" , {server: memberDelete.data})
+      const kickMember = await memberDelete.mutateAsync({
+        memberId,
+        serverId: server?.id
+      })
+      data.server = kickMember
     }catch(err){
       console.error(err)
     }finally{
@@ -63,8 +66,12 @@ export const MembersModal=()=>{
   const onRoleChange=async(memberId:string,role:string)=>{
     try{
      setLoadingId(memberId)
-     memberRoleChange.mutate({role,memberId,serverId: server?.id})
-     onOpen("members" , {server: memberRoleChange.data})
+     const roleUpdate = await memberRoleChange.mutateAsync({
+       role,
+       memberId,
+       serverId: server?.id 
+     })
+     data.server = roleUpdate
     }catch(err){
      console.error(err)
     }finally{
