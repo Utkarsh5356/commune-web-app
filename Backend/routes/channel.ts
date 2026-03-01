@@ -65,7 +65,7 @@ channel.delete("/delete",async (req: Request,res: Response)=>{
   const channelId=req.query.channelId as string
   const serverId=req.query.serverId as string
   
-  if(!channelId) res.status(400).json("Channel ID is missing")
+  if(!channelId) return res.status(400).json("Channel ID is missing")
   if(!serverId) return res.status(400).json("Missing Server ID")
   
   try{
@@ -116,7 +116,7 @@ channel.patch("/edit",async (req: Request,res: Response)=>{
   const channelId=req.query.channelId as string
   const serverId=req.query.serverId as string
   
-  if(!channelId) res.status(400).json("Channel ID is missing")
+  if(!channelId) return res.status(400).json("Channel ID is missing")
   if(!serverId) return res.status(400).json("Missing Server ID")
   
   if(values.name === "general") return res.status(400).json("Name cannot be general")  

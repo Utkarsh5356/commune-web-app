@@ -6,6 +6,7 @@ import { ChannelLayout } from "./pages/channelLayout"
 import {HomeLayout} from "./pages/homeLayout"
 import { ServerPage } from "./pages/serverPage"
 import { InviteCodePage } from "./pages/invite-code-page"
+import { ChannelIdPage } from "./pages/channelId"
 import { SSOcallback } from "./pages/sso-callback"
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
        <Route index element={<Navigate to={"@me"} replace/>}/>
        <Route path="@me" element={<HomeLayout/>}></Route>
        <Route path=":serverId" element={<ServerPage/>}/>
+       <Route path=":serverId/:channelId" element={<ChannelIdPage/>}/>
       </Route>
       <Route path={`/invite/:inviteCode`} element={<InviteCodePage/>}/>
       <Route path={"/sso-callback"} element={<SSOcallback/>}></Route>

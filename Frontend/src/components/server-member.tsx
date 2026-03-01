@@ -21,9 +21,13 @@ export const ServerMember = ({
   member,
   server
 }: ServerMemberProps) => {
-  const { memberId,channelId } = useParams();
+  const { memberId } = useParams();
   const navigate = useNavigate();
   const icon = roleIconMap[member.role];
+  
+  const onClick=()=>{
+    navigate(`${member.id}`)
+  }
 
   const Ticker = () => {
     return (
@@ -48,15 +52,13 @@ export const ServerMember = ({
           <div className="ticker-wrapper">
             <span className={cn(
                "whitespace-nowrap font-semibold text-sm text-zinc-400 group-hover:text-zinc-200 pr-12",
-                channelId === member.id && "text-zinc-200 group-hover:text-white",
-                memberId === member.id && "text-zinc-200"
+                memberId === member.id && "text-zinc-200 group-hover:text-white",
             )}>
               {member.profile.name}
             </span>
             <span className={cn(
                "whitespace-nowrap font-semibold text-sm text-zinc-400 group-hover:text-zinc-200 pr-12",
-                channelId === member.id && "text-zinc-200 group-hover:text-white",
-                memberId === member.id && "text-zinc-200"
+                memberId === member.id && "text-zinc-200 group-hover:text-white",
             )}>
               {member.profile.name}
             </span>
@@ -68,6 +70,7 @@ export const ServerMember = ({
 
   return (
     <button
+      onClick={onClick}
       className={cn(
         "group px-2 py-2 rounded-md flex items-center w-full hover:bg-zinc-700/50 transition mb-1",
         memberId === member.id && "bg-zinc-700"
