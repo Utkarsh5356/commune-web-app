@@ -1,5 +1,5 @@
 
-export function HomeLayout(){
+export function HomeContent(){
 
 
   return (

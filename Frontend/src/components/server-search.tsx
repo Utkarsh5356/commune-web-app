@@ -40,10 +40,10 @@ export const ServerSearch=({data}:ServerSearchProps)=>{
   
   const onClick=({id,type}:{id: string,type: "channel" | "member"})=>{
     if(type === "channel"){
-      return navigate(`${id}`)
+      return navigate(`channel/${id}`)
     }
     if(type === "member"){
-      return navigate(`${id}`)
+      return navigate(`member/${id}`)
     }
   }
 

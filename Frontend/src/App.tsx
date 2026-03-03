@@ -3,10 +3,10 @@ import {Home} from "./pages/home"
 import {Signup} from "./pages/signup"
 import {Signin} from "./pages/singin"
 import { ChannelLayout } from "./pages/channelLayout"
-import {HomeLayout} from "./pages/homeLayout"
+import { HomeContent } from "./pages/homeContent"
 import { ServerPage } from "./pages/serverPage"
 import { InviteCodePage } from "./pages/invite-code-page"
-import { ChannelIdPage } from "./pages/channelId"
+import { ChannelContent } from "./pages/channelContent"
 import { SSOcallback } from "./pages/sso-callback"
 
 function App() {
@@ -18,9 +18,11 @@ function App() {
       <Route path={"/signin"} element={<Signin/>}/>
       <Route path={"/channels"} element={<ChannelLayout/>}>
        <Route index element={<Navigate to={"@me"} replace/>}/>
-       <Route path="@me" element={<HomeLayout/>}></Route>
-       <Route path=":serverId" element={<ServerPage/>}/>
-       <Route path=":serverId/:channelId" element={<ChannelIdPage/>}/>
+       <Route path="@me" element={<HomeContent/>}></Route>
+       <Route path=":serverId" element={<ServerPage/>}>
+         <Route path="channel/:channelId" element={<ChannelContent/>}/>
+         <Route path="member/:memberId" element={<ChannelContent/>}/>
+       </Route> 
       </Route>
       <Route path={`/invite/:inviteCode`} element={<InviteCodePage/>}/>
       <Route path={"/sso-callback"} element={<SSOcallback/>}></Route>

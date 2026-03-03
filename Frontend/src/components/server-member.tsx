@@ -26,7 +26,7 @@ export const ServerMember = ({
   const icon = roleIconMap[member.role];
   
   const onClick=()=>{
-    navigate(`${member.id}`)
+    navigate(`member/${member.id}`)
   }
 
   const Ticker = () => {
@@ -72,7 +72,7 @@ export const ServerMember = ({
     <button
       onClick={onClick}
       className={cn(
-        "group px-2 py-2 rounded-md flex items-center w-full hover:bg-zinc-700/50 transition mb-1",
+        "group px-2 py-2 rounded-md flex items-center w-full hover:bg-zinc-700/50 transition mb-1 cursor-pointer",
         memberId === member.id && "bg-zinc-700"
       )}
     >

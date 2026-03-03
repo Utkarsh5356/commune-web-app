@@ -32,7 +32,7 @@ export const ServerChannel=({
   const Icon = iconMap[channel.type]
   
   const onCLick=()=>{
-    navigate(`${channel.id}`)
+    navigate(`channel/${channel.id}`)
   }
 
   const onAction = (e: React.MouseEvent, action: ModalType)=>{
