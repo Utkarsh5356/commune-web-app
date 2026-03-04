@@ -21,7 +21,7 @@ export const ServerPage=()=>{
     navigate(`channel/${generalChannelId[0]}`)
   },[userServerData])
   
-  const params={channelId,memberId}
+  const params={channelId,serverId,memberId}
   return (
    <div>
      <div className="bg-[#343639] flex min-h-screen w-screen text-white h-full">
@@ -37,7 +37,7 @@ export const ServerPage=()=>{
         }
        </div>
        </div>
-       <div className="pl-18 h-full">
+       <div className="pl-18 w-full h-full">
          <div className="h-full">
           {isServerLoading ? (
            <div className="flex-1 flex items-center justify-center">

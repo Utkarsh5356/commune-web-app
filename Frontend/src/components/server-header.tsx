@@ -42,7 +42,7 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
       >
         <button
          className="w-full text-md font-semibold px-3 cursor-pointer flex items-center
-          h-12 border-neutral-600 border-b-2 hover:bg-zinc-700/50 transition"
+          h-12 border-neutral-800 border-b-2 hover:bg-zinc-700/50 transition"
         >
           {serverHeaderData?.name}
           <ChevronDown className="h-5 w-5 ml-auto"/>

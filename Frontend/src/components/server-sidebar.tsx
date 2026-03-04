@@ -77,7 +77,7 @@ export const ServerSidebar=({userServerData,profileId}:ServerSidebarProps)=>{
             ]}
           />
        </div> 
-       <Separator className="bg-zinc-700 rounded-md my-2"/>
+       <Separator className="bg-zinc-700 h-0.5! w-55! rounded-md my-2 mx-auto"/>
        <ScrollArea className="flex-1 min-h-0 w-full px-4">
          {!!textChannels?.length && (
           <div className="mb-2">

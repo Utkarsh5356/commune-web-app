@@ -24,8 +24,8 @@ export const ServerNavigation=({serverData}:{serverData:Servers[] | undefined})=
       <div onClick={()=>{setShowHeaderUI(!showHeaderUI)}}><HeaderIcon headerImage={""} 
         id={"@me"} showHeaderUI={showHeaderUI}/></div>
       <Separator
-       className="h-0.5 bg-zinc-700  
-       rounded-md w-10 mx-auto"
+       className="h-0.5! bg-zinc-700  
+       rounded-md w-11! mx-auto"
       />  
       <ScrollArea className="flex-1 h-50 w-full">
        {serverData?.map((server)=>(
