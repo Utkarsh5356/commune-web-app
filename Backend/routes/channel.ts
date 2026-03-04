@@ -165,3 +165,32 @@ channel.patch("/edit",async (req: Request,res: Response)=>{
     return res.status(500).json("Internal Error")
   }
 })
+
+channel.get("/data",async(req: Request,res: Response)=>{
+  const {isAuthenticated,userId}=getAuth(req) 
+
+  if(!isAuthenticated) return res.status(401).json("User is not authenticated")
+   
+  const channelId=req.query.channelId as string
+  if(!channelId) return res.status(400).json("Channel ID is missing")
+  
+  try{
+    const profile=await db.profile.findUnique({
+    where:{
+      userId:userId
+    }
+   })
+   
+   if(!profile) return res.status(500).json("Internal error")
+    
+   const channel=await db.channel.findUnique({
+    where:{
+      id: channelId
+    }
+   })
+   
+   return res.json(channel)
+  }catch{
+    return res.status(500).json("Internal Error")
+  }  
+})

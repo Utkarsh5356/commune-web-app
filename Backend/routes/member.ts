@@ -117,3 +117,33 @@ member.patch("/role-change",async(req:Request,res:Response)=>{
     return res.status(500).json("Internal Error")
   }  
 })
+
+member.get("/data",async(req: Request,res: Response)=>{
+  const {isAuthenticated,userId}=getAuth(req) 
+
+  if(!isAuthenticated) return res.status(401).json("User is not authenticated")
+   
+  const serverId=req.query.serverId as string
+  if(!serverId) return res.status(400).json("Channel ID is missing")
+  
+  try{
+    const profile=await db.profile.findUnique({
+    where:{
+      userId:userId
+    }
+   })
+   
+   if(!profile) return res.status(500).json("Internal error")
+    
+   const member=await db.member.findFirst({
+    where:{
+      serverId: serverId,
+      profileId: profile.id
+    }
+   })
+   
+   return res.json(member)
+  }catch{
+    return res.status(500).json("Internal Error")
+  }  
+})
