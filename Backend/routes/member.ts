@@ -118,12 +118,13 @@ member.patch("/role-change",async(req:Request,res:Response)=>{
   }  
 })
 
-member.get("/data",async(req: Request,res: Response)=>{
+member.get("/current",async(req: Request,res: Response)=>{
   const {isAuthenticated,userId}=getAuth(req) 
 
   if(!isAuthenticated) return res.status(401).json("User is not authenticated")
-   
+  
   const serverId=req.query.serverId as string
+   
   if(!serverId) return res.status(400).json("Channel ID is missing")
   
   try{
