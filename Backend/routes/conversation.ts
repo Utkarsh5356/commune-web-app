@@ -29,9 +29,9 @@ conversation.get("/find-conversation",async (req: Request,res: Response)=>{
 
    const findConversation=await db.conversation.findFirst({
     where: {
-      AND: [
-        {memberOneId: memberOneId},
-        {memberTwoId: memberTwoId}
+      OR: [
+        {AND: [{memberOneId: memberOneId}, {memberTwoId: memberTwoId}]},
+        {AND: [{memberOneId: memberTwoId}, {memberTwoId: memberOneId}]}
       ]   
     },
     include: {
@@ -48,7 +48,19 @@ conversation.get("/find-conversation",async (req: Request,res: Response)=>{
     }
    })
    
-   return res.json(findConversation)
+   if(!findConversation) return res.status(404).json('Conversation not found')
+
+   const isFlipped = findConversation.memberOneId !== memberOneId
+
+   const conversation = isFlipped ? {
+    ...findConversation,
+    memberOneId: findConversation.memberTwoId,
+    memberTwoId: findConversation.memberOneId,
+    memberOne: findConversation.memberTwo,
+    memberTwo: findConversation.memberOne
+   } : findConversation
+
+   return res.json(conversation)
   }catch(err){
     return res.status(500).json("Internal error")
   }   

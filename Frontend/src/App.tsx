@@ -7,6 +7,7 @@ import { HomeContent } from "./pages/homeContent"
 import { ServerPage } from "./pages/serverPage"
 import { InviteCodePage } from "./pages/invite-code-page"
 import { ChannelContent } from "./pages/channelContent"
+import { MemberContent } from "./pages/memberContent"
 import { SSOcallback } from "./pages/sso-callback"
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
        <Route path="@me" element={<HomeContent/>}></Route>
        <Route path=":serverId" element={<ServerPage/>}>
          <Route path="channel/:channelId" element={<ChannelContent/>}/>
-         <Route path="member/:memberId" element={<ChannelContent/>}/>
+         <Route path="member/:memberId" element={<MemberContent/>}/>
        </Route> 
       </Route>
       <Route path={`/invite/:inviteCode`} element={<InviteCodePage/>}/>

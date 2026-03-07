@@ -50,7 +50,7 @@ export const ServerChannel=({
     >
      <Icon className="shrink-0 w-5 h-5 text-zinc-400 group-hover:text-zinc-200 transition"/>
      <p className={cn(
-        "line-clamp-1 font-semibold text-sm text-zinc-400 group-hover:text-zinc-200 transition",
+        "line-clamp-1 font-mono font-semibold text-sm text-zinc-400 group-hover:text-zinc-200 transition",
         channelId === channel.id && "text-zinc-200 group-hover:text-white"
      )}>
       {channel.name}

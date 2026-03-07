@@ -10,15 +10,14 @@ interface MemberData {
   serverId: string    
 }
 
-export const useMemberData=({serverId,memberId}:{serverId:string | undefined,memberId:string | undefined})=>{
+export const useCurrentMemberData=({serverId}:{serverId:string | undefined})=>{
   const {getToken}=useAuth()
   return useQuery({
-    queryKey: ["userMemberData" , memberId],
+    queryKey: ["userMemberData" , serverId],
     enabled: !!serverId,
-    placeholderData: (prev) => prev,
     queryFn: async()=>{
       const token=await getToken()
-      const memberData=await axios.get<MemberData>(`http://localhost:3000/api/v1/member/data?serverId=${serverId}`,{
+      const memberData=await axios.get<MemberData>(`http://localhost:3000/api/v1/member/current?serverId=${serverId}`,{
         headers:{
           'Authorization':`Bearer ${token}`,
           'Content-Type':'application/json'

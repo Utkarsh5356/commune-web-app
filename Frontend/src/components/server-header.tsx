@@ -41,7 +41,7 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
        className="focus:outline-none"
       >
         <button
-         className="w-full text-md font-semibold px-3 cursor-pointer flex items-center
+         className="w-full text-lg font-mono font-semibold px-3 cursor-pointer flex items-center
           h-12 border-neutral-800 border-b-2 hover:bg-zinc-700/50 transition"
         >
           {serverHeaderData?.name}
@@ -54,7 +54,7 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
        {isModerator && (
          <DropdownMenuItem 
           onClick={()=>onOpen("invite", { server })}
-          className="text-indigo-500 h-full w-full px-3 py-2 text-sm cursor-pointer
+          className="text-indigo-500 font-mono h-full w-full px-3 py-2 text-sm cursor-pointer
           hover:bg-neutral-700 hover:text-indigo-400
           focus:bg-neutral-700 focus:text-indigo-400
           active:bg-neutral-700 active:text-indigo-400
@@ -68,7 +68,7 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
        {isAdmin && (
          <DropdownMenuItem 
           onClick={()=>onOpen("editServer" , {server})}
-          className="text-white h-full w-full px-3 py-2 text-sm cursor-pointer
+          className="text-white font-mono h-full w-full px-3 py-2 text-sm cursor-pointer
           hover:bg-neutral-700 hover:text-neutral-300
           focus:bg-neutral-700 focus:text-neutral-300
           active:bg-neutral-700 active:text-neutral-300
@@ -82,7 +82,7 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
        {isAdmin && (
          <DropdownMenuItem 
           onClick={()=>onOpen("members" , {server})}
-          className="text-white h-full w-full px-3 py-2 text-sm cursor-pointer
+          className="text-white font-mono h-full w-full px-3 py-2 text-sm cursor-pointer
           hover:bg-neutral-700 hover:text-neutral-300
           focus:bg-neutral-700 focus:text-neutral-300
           active:bg-neutral-700 active:text-neutral-300
@@ -96,7 +96,7 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
        {isModerator && (
          <DropdownMenuItem 
           onClick={()=>onOpen("createChannel" , {server})}
-          className="text-white h-full w-full px-3 py-2 text-sm cursor-pointer
+          className="text-white font-mono h-full w-full px-3 py-2 text-sm cursor-pointer
           hover:bg-neutral-700 hover:text-neutral-300
           focus:bg-neutral-700 focus:text-neutral-300
           active:bg-neutral-700 active:text-neutral-300
@@ -113,7 +113,7 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
         {isAdmin && (
          <DropdownMenuItem 
           onClick={()=>onOpen("deleteServer" , {server})}
-          className="text-rose-500 h-full w-full px-3 py-2 text-sm cursor-pointer
+          className="text-rose-500 font-mono h-full w-full px-3 py-2 text-sm cursor-pointer
           hover:bg-neutral-700 hover:text-rose-500
           focus:bg-neutral-700 focus:text-rose-500
           active:bg-neutral-700 active:text-rose-500
@@ -130,7 +130,7 @@ export const ServerHeader=({serverHeaderData,role}:ServerHeaderProps)=>{
        {!isAdmin && (
          <DropdownMenuItem
           onClick={()=>onOpen("leaveServer" , {server})} 
-          className="text-rose-500 h-full w-full px-3 py-2 text-sm cursor-pointer
+          className="text-rose-500 font-mono h-full w-full px-3 py-2 text-sm cursor-pointer
           hover:bg-neutral-700 hover:text-rose-500
           focus:bg-neutral-700 focus:text-rose-500
           active:bg-neutral-700 active:text-rose-500

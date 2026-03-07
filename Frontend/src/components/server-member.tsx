@@ -41,23 +41,22 @@ export const ServerMember = ({
             display: flex;
             width: fit-content;
             will-change: transform;
-            animation: smoothTicker 10s linear infinite;
           }
           .group:hover .ticker-wrapper {
-            animation-play-state: paused;
+            animation: smoothTicker 10s linear infinite;
           }
         `}</style>
         
         <div className="w-30 overflow-hidden ml-2">
           <div className="ticker-wrapper">
             <span className={cn(
-               "whitespace-nowrap font-semibold text-sm text-zinc-400 group-hover:text-zinc-200 pr-12",
+               "whitespace-nowrap font-mono font-semibold text-sm text-zinc-400 group-hover:text-zinc-200 pr-12",
                 memberId === member.id && "text-zinc-200 group-hover:text-white",
             )}>
               {member.profile.name}
             </span>
             <span className={cn(
-               "whitespace-nowrap font-semibold text-sm text-zinc-400 group-hover:text-zinc-200 pr-12",
+               "whitespace-nowrap font-mono font-semibold text-sm text-zinc-400 group-hover:text-zinc-200 pr-12",
                 memberId === member.id && "text-zinc-200 group-hover:text-white",
             )}>
               {member.profile.name}
