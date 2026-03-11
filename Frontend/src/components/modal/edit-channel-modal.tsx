@@ -1,17 +1,17 @@
-import { useChannelEdit } from "@/hooks/use-channel-edit"
+import { useChannelEdit } from "@/hooks/channel/use-channel-edit"
 import { useModal } from "store/use-modal-store"
 import {useForm} from "react-hook-form"
 import * as z from "zod"
 import {zodResolver} from "@hookform/resolvers/zod"
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "./ui/dialog"
+} from "../ui/dialog"
 import {
   Form,
   FormControl,
@@ -19,14 +19,14 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from "./ui/form"
+} from "../ui/form"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue 
-} from "./ui/select" 
+} from "../ui/select" 
 import { useEffect } from "react"
 
 const ChannelType={

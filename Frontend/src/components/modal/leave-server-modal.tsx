@@ -1,6 +1,6 @@
-import { useServerDelete } from "@/hooks/use-server-delete"
+import { useServerLeave } from "@/hooks/server/use-server-leave"
 import { useModal } from "store/use-modal-store"
-import { Button } from "./ui/button"
+import { Button } from "../ui/button"
 import { useNavigate } from "react-router"
 import {
   Dialog,
@@ -9,20 +9,20 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter
-} from "./ui/dialog"
+} from "../ui/dialog"
 
-export const DeleteServerModal=()=>{
-  const serverDelete=useServerDelete()
+export const LeaveServerModal=()=>{
+  const serverLeave=useServerLeave()
   const navigate=useNavigate()  
   const { isOpen,onClose,type,data }=useModal() 
   const { server }=data
   
-  const isModalOpen=isOpen && type === "deleteServer"
+  const isModalOpen=isOpen && type === "leaveServer"
   
-  const deleteServer=async()=>{
-    const deleteServer=await serverDelete.mutateAsync({serverId: server?.id})
+  const leave=async()=>{
+    const leave = await serverLeave.mutateAsync({serverId: server?.id})
 
-    if(deleteServer) onClose()
+    if(leave) onClose()
     navigate("/channels/@me")
   }
   
@@ -32,28 +32,27 @@ export const DeleteServerModal=()=>{
        <DialogContent className="sm:max-w-106.25">
          <DialogHeader>
             <DialogTitle className="text-center text-2xl font-bold">
-               Delete Server
+               Leave Server
             </DialogTitle>
             <DialogDescription className="text-center text-zinc-500">
-               Are you sure you want to this? <br/> 
-               <span className="font-semibold text-indigo-500"> 
+               Are you sure you want to leave <span className="font-semibold text-indigo-500">
                 {server?.name}
-               </span> will be permanently deleted.
+               </span> 
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="bg-gray-100 rounded-b-sm -mx-6 -mb-6 px-6 py-4">
             <div className="flex items-center justify-between w-full">
               <Button
-                disabled={serverDelete.isPending}
+                disabled={serverLeave.isPending}
                 onClick={onClose}
                 variant="ghost"
               >
                 Cancel
               </Button>
               <Button
-                disabled={serverDelete.isPending}
+                disabled={serverLeave.isPending}
                 variant="primary"
-                onClick={()=>deleteServer()}
+                onClick={()=>leave()}
               >
                 Confirm
               </Button>

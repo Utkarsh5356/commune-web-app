@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { useAuth } from "@clerk/clerk-react"
 import { useModal } from "store/use-modal-store"
-import { Label } from "./ui/label"
-import { Input } from "./ui/input"
-import { Button } from "./ui/button"
+import { Label } from "../ui/label"
+import { Input } from "../ui/input"
+import { Button } from "../ui/button"
 import { Copy, RefreshCw,Check } from "lucide-react"
 import { useOrigin } from "@/hooks/use-origin"
 import axios from "axios"
@@ -12,7 +12,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "./ui/dialog"
+} from "../ui/dialog"
 
 export const InviteModal=()=>{
   const {getToken}=useAuth()

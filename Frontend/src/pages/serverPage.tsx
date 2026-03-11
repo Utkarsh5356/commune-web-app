@@ -1,8 +1,8 @@
 import { useEffect } from "react"
 import { useParams,useNavigate } from "react-router"
 import { useOutletContext,Outlet } from "react-router-dom"
-import { ServerSidebar } from "@/components/server-sidebar"
-import { useServerData } from "@/hooks/use-server-data"
+import { ServerSidebar } from "@/components/server/server-sidebar"
+import { useServerData } from "@/hooks/server/use-server-data"
 import Loader from "@/components/ui/loader"
 
 export const ServerPage=()=>{
@@ -24,7 +24,7 @@ export const ServerPage=()=>{
   const params={channelId,serverId,memberId}
   return (
    <div>
-     <div className="bg-[#343639] flex min-h-screen w-screen text-white h-full">
+     <div className="bg-[#313338] flex min-h-screen w-screen text-white h-full">
       <div className="h-full">
        <div className="flex h-full pl-18 w-60 z-20
         flex-col inset-y-0">

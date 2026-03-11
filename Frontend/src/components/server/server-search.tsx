@@ -8,7 +8,7 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandItem
-} from "./ui/command"
+} from "../ui/command"
 
 interface ServerSearchProps{
   data:{

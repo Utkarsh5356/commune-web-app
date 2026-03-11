@@ -1,4 +1,4 @@
-import { ActionTooltip } from "./action-tooltip"
+import { ActionTooltip } from "../action-tooltip"
 import { Plus } from "lucide-react"
 import { useModal } from "store/use-modal-store"
 

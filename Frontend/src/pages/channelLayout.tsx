@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-import { useInitiateProfile } from "@/hooks/use-initiateProfile";
-import { useAllServers } from "@/hooks/use-all-servers";
-import { useCurrentProfile } from "@/hooks/use-currentProfile"; 
-import { ServerNavigation } from "@/components/server-navigation";
+import { useInitiateProfile } from "@/hooks/profile/use-initiateProfile";
+import { useAllServers } from "@/hooks/server/use-all-servers";
+import { useCurrentProfile } from "@/hooks/profile/use-currentProfile"; 
+import { ServerNavigation } from "@/components/navigation/server-navigation";
 import Loader from "@/components/ui/loader";
 
 export const ChannelLayout=()=>{ 

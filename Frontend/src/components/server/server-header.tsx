@@ -1,4 +1,4 @@
-import { type Members } from "@/hooks/use-server-data"
+import { type Members } from "@/hooks/server/use-server-data"
 import { useModal } from "store/use-modal-store";
 import { 
  ChevronDown,
@@ -15,7 +15,7 @@ import {
  DropdownMenuContent,
  DropdownMenuItem,
  DropdownMenuSeparator
-} from "./ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 
 export interface ServerProps {
   id:string;

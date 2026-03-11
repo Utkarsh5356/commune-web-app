@@ -1,9 +1,9 @@
-import { type Members} from "@/hooks/use-server-data"
+import { type Members} from "@/hooks/server/use-server-data"
 import { type ServerProps } from "./server-header";
 import { useParams,useNavigate } from "react-router-dom";
-import { MemberRole } from "@/hooks/use-server-data";
+import { MemberRole } from "@/hooks/server/use-server-data";
 import { ShieldCheck } from "lucide-react";
-import { UserAvatar } from "./user-avatar";
+import { UserAvatar } from "../user-avatar";
 import { cn } from "@/lib/utils"; 
 
 interface ServerMemberProps {

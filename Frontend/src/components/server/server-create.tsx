@@ -1,11 +1,11 @@
 import { useModal } from "store/use-modal-store"
-import { useServerCreate } from "@/hooks/use-server-create"
+import { useServerCreate } from "@/hooks/server/use-server-create"
 import {useForm} from "react-hook-form"
 import * as z from "zod"
 import {zodResolver} from "@hookform/resolvers/zod"
-import { ImageUpload } from "./imageUpload"
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
+import { ImageUpload } from "../imageUpload"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "./ui/dialog"
+} from "../ui/dialog"
 import {
   Form,
   FormControl,
@@ -21,7 +21,7 @@ import {
   FormField,
   FormItem,
   FormMessage
-} from "./ui/form"
+} from "../ui/form"
 
 const formSchema=z.object({
   name:z.string().min(1,{message:"Server name is required"}),

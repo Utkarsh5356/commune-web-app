@@ -1,8 +1,8 @@
-import { ChannelType, MemberRole, type Channels } from "@/hooks/use-server-data";
+import { ChannelType, MemberRole, type Channels } from "@/hooks/server/use-server-data";
 import { type ServerProps } from "./server-header";
 import { useParams,useNavigate } from "react-router-dom"
 import { Hash,Mic,Video,Edit,Trash,Lock } from "lucide-react";
-import { ActionTooltip } from "./action-tooltip";
+import { ActionTooltip } from "../action-tooltip";
 import { cn } from "@/lib/utils";
 import { type ModalType,useModal } from "store/use-modal-store";
 

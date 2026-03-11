@@ -1,7 +1,7 @@
-import { MemberRole, type ChannelType } from "@/hooks/use-server-data";
+import { MemberRole, type ChannelType } from "@/hooks/server/use-server-data";
 import { useModal } from "store/use-modal-store";
 import type { ServerProps } from "./server-header";
-import { ActionTooltip } from "./action-tooltip";
+import { ActionTooltip } from "../action-tooltip";
 import { Plus,Settings } from "lucide-react";
 
 interface ServerSectionProps {

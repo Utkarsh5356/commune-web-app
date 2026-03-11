@@ -1,13 +1,13 @@
-import { ChannelType } from "@/hooks/use-server-data";
+import { ChannelType } from "@/hooks/server/use-server-data";
 import { ServerSection } from "./server-section";
 import { ServerChannel } from "./server-channel";
 import { ServerHeader } from "./server-header";
 import { ServerMember } from "./server-member";
-import { type ServerData } from "@/hooks/use-server-data";
-import { ScrollArea } from "./ui/scroll-area";
+import { type ServerData } from "@/hooks/server/use-server-data";
+import { ScrollArea } from "../ui/scroll-area";
 import { ServerSearch } from "./server-search";
 import { Hash,Mic,ShieldCheck,User2,Video } from "lucide-react";
-import { Separator } from "./ui/separator";
+import { Separator } from "../ui/separator";
 
 interface ServerSidebarProps {
   userServerData: ServerData | undefined; 

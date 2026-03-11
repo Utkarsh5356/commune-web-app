@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/clerk-react"
 import { useQuery } from "@tanstack/react-query";
-import { ChannelType } from "./use-server-data"; 
+import { ChannelType } from "../server/use-server-data"; 
 import axios from "axios"
 
 interface ChannelData{

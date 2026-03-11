@@ -1,9 +1,9 @@
-import { useMemberDelete } from "@/hooks/use-member-delete"
-import { useMemberRoleChange } from "@/hooks/use-member-rolechange"
+import { useMemberDelete } from "@/hooks/member/use-member-delete"
+import { useMemberRoleChange } from "@/hooks/member/use-member-rolechange"
 import { useModal } from "store/use-modal-store"
 import { useState } from "react"
-import { ScrollArea } from "./ui/scroll-area"
-import { UserAvatar } from "./user-avatar"
+import { ScrollArea } from "../ui/scroll-area"
+import { UserAvatar } from "../user-avatar"
 import { 
   ShieldCheck,
   MoreVertical,
@@ -19,7 +19,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "./ui/dialog"
+} from "../ui/dialog"
 import {
  DropdownMenu,
  DropdownMenuContent,
@@ -30,7 +30,7 @@ import {
  DropdownMenuSubContent,
  DropdownMenuTrigger,
  DropdownMenuSubTrigger
-} from "./ui/dropdown-menu"
+} from "../ui/dropdown-menu"
 
 const roleIconMap=(role:string)=>{
   if(role === "GUEST") return null

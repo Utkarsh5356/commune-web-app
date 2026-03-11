@@ -1,12 +1,12 @@
 import { useState,useEffect } from "react"
 import { useParams } from "react-router"
-import { Separator } from "./ui/separator"
+import { Separator } from "../ui/separator"
 import { NavigationAction } from "./navigation-action"
-import { ScrollArea } from "./ui/scroll-area"
+import { ScrollArea } from "../ui/scroll-area"
 import { NavigationItem } from "./navigation-item"
-import { HeaderIcon } from "./header-icon"
+import { HeaderIcon } from "../header-icon"
 import { UserButton } from "@clerk/clerk-react"
-import { type Servers } from "@/hooks/use-all-servers"
+import { type Servers } from "@/hooks/server/use-all-servers"
 
 export const ServerNavigation=({serverData}:{serverData:Servers[] | undefined})=>{
   const [showHeaderUI,setShowHeaderUI]=useState(true)

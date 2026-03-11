@@ -1,6 +1,7 @@
-import { useChannelDelete } from "@/hooks/use-channel-delete"
+import { useServerDelete } from "@/hooks/server/use-server-delete"
 import { useModal } from "store/use-modal-store"
-import { Button } from "./ui/button"
+import { Button } from "../ui/button"
+import { useNavigate } from "react-router"
 import {
   Dialog,
   DialogContent,
@@ -8,19 +9,21 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter
-} from "./ui/dialog"
+} from "../ui/dialog"
 
-export const DeleteChannelModal=()=>{
-  const channelDelete=useChannelDelete()  
+export const DeleteServerModal=()=>{
+  const serverDelete=useServerDelete()
+  const navigate=useNavigate()  
   const { isOpen,onClose,type,data }=useModal() 
-  const { server,channel }=data
+  const { server }=data
   
-  const isModalOpen=isOpen && type === "deleteChannel"
+  const isModalOpen=isOpen && type === "deleteServer"
   
-  const deleteChannel=async()=>{
-    const deleteChannel=await channelDelete.mutateAsync({channelId: channel?.id,serverId: server?.id})
+  const deleteServer=async()=>{
+    const deleteServer=await serverDelete.mutateAsync({serverId: server?.id})
 
-    if(deleteChannel) onClose()
+    if(deleteServer) onClose()
+    navigate("/channels/@me")
   }
   
   return (
@@ -29,28 +32,28 @@ export const DeleteChannelModal=()=>{
        <DialogContent className="sm:max-w-106.25">
          <DialogHeader>
             <DialogTitle className="text-center text-2xl font-bold">
-               Delete Channel
+               Delete Server
             </DialogTitle>
             <DialogDescription className="text-center text-zinc-500">
                Are you sure you want to this? <br/> 
                <span className="font-semibold text-indigo-500"> 
-                #{channel?.name}
+                {server?.name}
                </span> will be permanently deleted.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="bg-gray-100 rounded-b-sm -mx-6 -mb-6 px-6 py-4">
             <div className="flex items-center justify-between w-full">
               <Button
-                disabled={channelDelete.isPending}
+                disabled={serverDelete.isPending}
                 onClick={onClose}
                 variant="ghost"
               >
                 Cancel
               </Button>
               <Button
-                disabled={channelDelete.isPending}
+                disabled={serverDelete.isPending}
                 variant="primary"
-                onClick={()=>deleteChannel()}
+                onClick={()=>deleteServer()}
               >
                 Confirm
               </Button>

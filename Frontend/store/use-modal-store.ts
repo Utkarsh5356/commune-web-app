@@ -1,5 +1,5 @@
-import { type ServerProps } from "@/components/server-header";
-import type { Channels, ChannelType } from "@/hooks/use-server-data";
+import { type ServerProps } from "@/components/server/server-header";
+import type { Channels, ChannelType } from "@/hooks/server/use-server-data";
 import {create} from "zustand"
 
 export type ModalType= "createServer" | "invite" | "editServer"

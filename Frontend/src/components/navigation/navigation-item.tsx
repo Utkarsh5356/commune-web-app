@@ -1,7 +1,7 @@
 import {Image} from "@unpic/react"
 import { useParams,useNavigate } from "react-router";
 import { cn } from "@/lib/utils"
-import { ActionTooltip } from "./action-tooltip"
+import { ActionTooltip } from "../action-tooltip"
 
 interface NavigationItemProps {
    id: string;

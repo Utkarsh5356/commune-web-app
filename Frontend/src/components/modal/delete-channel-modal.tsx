@@ -1,7 +1,6 @@
-import { useServerLeave } from "@/hooks/use-server-leave"
+import { useChannelDelete } from "@/hooks/channel/use-channel-delete"
 import { useModal } from "store/use-modal-store"
-import { Button } from "./ui/button"
-import { useNavigate } from "react-router"
+import { Button } from "../ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,21 +8,19 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter
-} from "./ui/dialog"
+} from "../ui/dialog"
 
-export const LeaveServerModal=()=>{
-  const serverLeave=useServerLeave()
-  const navigate=useNavigate()  
+export const DeleteChannelModal=()=>{
+  const channelDelete=useChannelDelete()  
   const { isOpen,onClose,type,data }=useModal() 
-  const { server }=data
+  const { server,channel }=data
   
-  const isModalOpen=isOpen && type === "leaveServer"
+  const isModalOpen=isOpen && type === "deleteChannel"
   
-  const leave=async()=>{
-    const leave = await serverLeave.mutateAsync({serverId: server?.id})
+  const deleteChannel=async()=>{
+    const deleteChannel=await channelDelete.mutateAsync({channelId: channel?.id,serverId: server?.id})
 
-    if(leave) onClose()
-    navigate("/channels/@me")
+    if(deleteChannel) onClose()
   }
   
   return (
@@ -32,27 +29,28 @@ export const LeaveServerModal=()=>{
        <DialogContent className="sm:max-w-106.25">
          <DialogHeader>
             <DialogTitle className="text-center text-2xl font-bold">
-               Leave Server
+               Delete Channel
             </DialogTitle>
             <DialogDescription className="text-center text-zinc-500">
-               Are you sure you want to leave <span className="font-semibold text-indigo-500">
-                {server?.name}
-               </span> 
+               Are you sure you want to this? <br/> 
+               <span className="font-semibold text-indigo-500"> 
+                #{channel?.name}
+               </span> will be permanently deleted.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="bg-gray-100 rounded-b-sm -mx-6 -mb-6 px-6 py-4">
             <div className="flex items-center justify-between w-full">
               <Button
-                disabled={serverLeave.isPending}
+                disabled={channelDelete.isPending}
                 onClick={onClose}
                 variant="ghost"
               >
                 Cancel
               </Button>
               <Button
-                disabled={serverLeave.isPending}
+                disabled={channelDelete.isPending}
                 variant="primary"
-                onClick={()=>leave()}
+                onClick={()=>deleteChannel()}
               >
                 Confirm
               </Button>

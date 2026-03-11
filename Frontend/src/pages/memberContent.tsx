@@ -1,10 +1,10 @@
 import { useEffect,useState } from "react"
 import Loader from "@/components/ui/loader"
-import { useCurrentMemberData } from "@/hooks/use-current-member-data" 
+import { useCurrentMemberData } from "@/hooks/member/use-current-member-data" 
 import { getOrCreateConversation } from "@/hooks/use-conversation"
-import { MemberRole } from "@/hooks/use-server-data"
+import { MemberRole } from "@/hooks/server/use-server-data"
 import { useOutletContext } from "react-router"
-import { ChatHeader } from "@/components/chat-header"
+import { ChatHeader } from "@/components/chat/chat-header"
 
 interface MemberOneandTwoProps {
   id: string;
