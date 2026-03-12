@@ -14,7 +14,7 @@ server.post("/create",async(req:Request,res:Response)=>{
   if(!isAuthenticated) return res.status(401).json("User is not authenticated")
 
   const {values}:{values:{name:string,imageUrl:string}}=req.body
-  if(!values) return res.status(401).json("Unauthorized")
+  if(!values) return res.status(400).json("Values is missing")
 
   try{
     const profile=await db.profile.findUnique({
@@ -260,8 +260,9 @@ server.patch("/customize",async(req:Request,res:Response)=>{
   const {values}:{values:{name:string,imageUrl:string}}=req.body
    
   if(!serverId) return res.status(400).json("Server ID is missing")
+  if(!values) return res.status(400).json("Values is missing")
 
-  try{
+ try{
    const profile=await db.profile.findUnique({
     where:{
       userId:userId

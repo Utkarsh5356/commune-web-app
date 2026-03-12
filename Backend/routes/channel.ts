@@ -17,6 +17,7 @@ channel.post("/create",async (req:Request,res:Response)=>{
    const {values}:{values:{name:string,type:ChannelType}}=req.body
 
    if(!serverId) return res.status(400).json("Missing Server ID")
+   if(!values) return res.status(400).json("Values is missing")
    if(values.name === "general") return res.status(400).json("Channel name cannot be general")
    
   try{
@@ -116,6 +117,7 @@ channel.patch("/edit",async (req: Request,res: Response)=>{
   const channelId=req.query.channelId as string
   const serverId=req.query.serverId as string
   
+  if(!values) return res.status(400).json("Values is missing")
   if(!channelId) return res.status(400).json("Channel ID is missing")
   if(!serverId) return res.status(400).json("Missing Server ID")
   
