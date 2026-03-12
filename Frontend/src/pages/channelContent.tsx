@@ -11,27 +11,22 @@ export const ChannelContent=()=>{
   if(channelDataLoading) return <Loader/>
   
   return(
-    <div>
+    <div className="h-full">
       <div className="bg-[#313338] flex flex-col h-full">
         <ChatHeader 
          name={channelData?.name}
          serverId={channelData?.serverId}
          type="channel"
         />
-        <div className="flex-1">
+        <div className="flex-1 overflow-y-auto">
           Future Messages
         </div>
-        <div> 
-         <ChatInput 
+        <ChatInput 
           name={channelData?.name}
           type="channel"
-          apiUrl="http://localhost:3000/api/v1/messages"
-          query={{
-           channelId: channelId,
-           serverId: serverId
-         }}
+          channelId= {channelId}
+          serverId= {serverId}
         />
-        </div>
         
        </div>
     </div>

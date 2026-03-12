@@ -24,7 +24,7 @@ export const ServerPage=()=>{
   const params={channelId,serverId,memberId}
   return (
    <div>
-     <div className="bg-[#313338] flex min-h-screen w-screen text-white h-full">
+     <div className="bg-[#313338] flex h-screen w-screen text-white">
       <div className="h-full">
        <div className="flex h-full pl-18 w-60 z-20
         flex-col inset-y-0">
@@ -43,7 +43,7 @@ export const ServerPage=()=>{
            <div className="flex-1 flex items-center justify-center">
               <Loader/>
            </div> ):(
-            <div className="flex-1 h-full">
+            <div className="h-full">
              {channelId || memberId ? <Outlet context={params}/> : <Loader/>}
             </div>
            )

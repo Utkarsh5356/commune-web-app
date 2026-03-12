@@ -1,5 +1,6 @@
 import * as z from "zod"
 import { useForm } from "react-hook-form";
+import { useChatInput } from "@/hooks/chat/use-chat-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
  Form,
@@ -11,8 +12,8 @@ import { Input } from "../ui/input";
 import { Plus,Smile } from "lucide-react";
 
 interface ChatInputProps {
-  apiUrl: string;
-  query: Record<string, any>;
+  serverId: string;
+  channelId: string;
   name?: string;
   type: "conversation" | "channel";
 }
@@ -22,11 +23,12 @@ const formSchema = z.object({
 })
 
 export const ChatInput=({
-  apiUrl,
-  query,
+  channelId,
+  serverId,
   name,
   type  
 }:ChatInputProps)=>{
+ const chatInput=useChatInput() 
  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,10 +36,10 @@ export const ChatInput=({
     }
  })
  
- const isLoading = form.formState.isSubmitting 
+ const isLoading = chatInput.isPending
 
  const onSubmit = async(values: z.infer<typeof formSchema>)=>{
-   console.log(values)
+  await chatInput.mutateAsync({values,channelId,serverId})
  }
 
  return (
@@ -57,7 +59,7 @@ export const ChatInput=({
                bg-zinc-400 hover:bg-zinc-300 transition rounded-full
                p-1 flex items-center justify-center"
               >
-               <Plus className="text-[#313338] "/>
+               <Plus className="text-[#313338] cursor-pointer"/>
               </button>
               <Input
                disabled={isLoading}
@@ -68,7 +70,7 @@ export const ChatInput=({
                {...field}
               />
               <div className="absolute top-7 right-8">
-                <Smile/>
+                <Smile className="cursor-pointer"/>
               </div>
             </div>
           </FormControl>  
