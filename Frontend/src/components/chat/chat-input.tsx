@@ -2,6 +2,7 @@ import * as z from "zod"
 import { useForm } from "react-hook-form";
 import { useChatInput } from "@/hooks/chat/use-chat-input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useModal } from "store/use-modal-store";
 import {
  Form,
  FormControl,
@@ -12,6 +13,7 @@ import { Input } from "../ui/input";
 import { Plus,Smile } from "lucide-react";
 
 interface ChatInputProps {
+  apiUrl: string
   serverId: string;
   channelId: string;
   name?: string;
@@ -23,12 +25,14 @@ const formSchema = z.object({
 })
 
 export const ChatInput=({
+  apiUrl,
   channelId,
   serverId,
   name,
   type  
 }:ChatInputProps)=>{
  const chatInput=useChatInput() 
+ const { onOpen }=useModal()
  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +58,7 @@ export const ChatInput=({
             <div className="relative p-4 pb-6">
               <button
                type="button"
-               onClick={()=>{}}
+               onClick={() => onOpen("messageFile" , {apiUrl,query:{serverId,channelId}})}
                className="absolute top-7 left-8 h-6 w-6
                bg-zinc-400 hover:bg-zinc-300 transition rounded-full
                p-1 flex items-center justify-center"

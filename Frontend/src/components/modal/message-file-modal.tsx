@@ -5,11 +5,10 @@ import * as z from "zod"
 import {zodResolver} from "@hookform/resolvers/zod"
 import { FileUpload } from "../file-upload"
 import { Button } from "../ui/button"
-import { Input } from "../ui/input"
-import { useEffect } from "react"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -17,10 +16,8 @@ import {
 import {
   Form,
   FormControl,
-  FormLabel,
   FormField,
   FormItem,
-  FormMessage
 } from "../ui/form"
 
 const formSchema=z.object({
@@ -28,35 +25,27 @@ const formSchema=z.object({
   imageUrl:z.string().min(1,{message:"Server image is required"})
 })
 
-export const EditServerModal=()=>{
+export const MessageFileModal=()=>{
   const serverEdit=useServerEdit()
   const { isOpen,onClose,type,data }=useModal() 
   
-  const isModalOpen=isOpen && type === "editServer"
+  const isModalOpen=isOpen && type === "messageFile"
   const {server} = data
 
   const form=useForm({
     resolver:zodResolver(formSchema),
     defaultValues:{
-      name:"",
       imageUrl:""
     }
   })
   
-  useEffect(()=>{
-    if(server){
-      form.setValue("name" , server.name)
-      form.setValue("imageUrl" , server.imageUrl)  
-    }
-  },[server,form])
-
   const isLoading = serverEdit.isPending
   
-  const onSubmit = async(values:z.infer<typeof formSchema>)=>{
-    const edit = await serverEdit.mutateAsync({values, serverId : server?.id})
+  const onSubmit = (values:z.infer<typeof formSchema>)=>{
+    serverEdit.mutate({values,serverId:server?.id})
 
     form.reset()
-    if(edit) onClose()
+    onClose()
   }
   
   const handleClose = ()=>{
@@ -68,8 +57,11 @@ export const EditServerModal=()=>{
       <Dialog open={isModalOpen} onOpenChange={handleClose}>
        <DialogContent className="sm:max-w-106.25">
          <DialogHeader>
-            <DialogTitle className="text-center text-2xl font-bold">Customize Your Server</DialogTitle>
+            <DialogTitle className="text-center text-2xl font-bold">Add an Attachment</DialogTitle>
           </DialogHeader>
+          <DialogDescription className="text-center text-zinc-500">
+            Send a file as a message
+          </DialogDescription> 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} 
               className="space-y-8"
@@ -88,36 +80,14 @@ export const EditServerModal=()=>{
                            disabled={isLoading}
                           />
                         </FormControl>
-                        <FormMessage className="w-24"/>
                       </FormItem>
                     )}
                   />
                 </div>
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({field})=>(
-                    <FormItem>
-                      <FormLabel 
-                        className="uppercase text-xs font-bold text-zinc-500">
-                        Server Name
-                      </FormLabel>
-                      <FormControl>
-                        <Input 
-                         disabled={isLoading}
-                         className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black
-                         focus-visible:ring-offset-0"
-                         placeholder="Enter server name"
-                         {...field}
-                        />
-                       </FormControl>
-                       <FormMessage/>
-                    </FormItem>
-                  )}
-                />
+                
               </div>
-             <DialogFooter className="bg-gray-100 -mx-6 -mb-6 rounded-b -sm px-6 py-4">
-                <Button className="w-full" variant="primary" type="submit" disabled={isLoading}>Save</Button>
+              <DialogFooter className="bg-gray-100 -mx-6 -mb-6 rounded-b -sm px-6 py-4">
+                <Button className="w-full" variant="primary" type="submit" disabled={isLoading}>Send</Button>
               </DialogFooter>
            </form>
           </Form>

@@ -3,7 +3,7 @@ import { useServerCreate } from "@/hooks/server/use-server-create"
 import {useForm} from "react-hook-form"
 import * as z from "zod"
 import {zodResolver} from "@hookform/resolvers/zod"
-import { ImageUpload } from "../imageUpload"
+import { FileUpload } from "../file-upload"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import {
@@ -28,7 +28,7 @@ const formSchema=z.object({
   imageUrl:z.string().min(1,{message:"Server image is required"})
 })
 
-export const ServerCreate=()=>{
+export const ServerCreateModal=()=>{
   const serverCreate=useServerCreate()
   const { isOpen,onClose,type }=useModal() 
   
@@ -79,7 +79,7 @@ export const ServerCreate=()=>{
                    render={({field})=>(
                      <FormItem>
                         <FormControl>
-                          <ImageUpload
+                          <FileUpload
                            value={field.value}
                            onChange={field.onChange}
                            disabled={isLoading}

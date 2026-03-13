@@ -21,7 +21,8 @@ export const ChannelContent=()=>{
         <div className="flex-1 overflow-y-auto">
           Future Messages
         </div>
-        <ChatInput 
+        <ChatInput
+          apiUrl = "http://localhost:3000/api/v1/messages" 
           name={channelData?.name}
           type="channel"
           channelId= {channelId}

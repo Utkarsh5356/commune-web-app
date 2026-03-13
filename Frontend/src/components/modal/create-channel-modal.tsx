@@ -150,8 +150,8 @@ export const CreateChannelModal=()=>{
                   )}
                 />
               </div>
-              <DialogFooter className="px-6">
-                <Button variant="primary" type="submit" disabled={isLoading}>Create</Button>
+              <DialogFooter className="bg-gray-100 -mx-6 -mb-6 rounded-b -sm px-6 py-4">
+                <Button className="w-full" variant="primary" type="submit" disabled={isLoading}>Create</Button>
               </DialogFooter>
            </form>
           </Form>

@@ -5,6 +5,9 @@ export const uploadCloudinary=(
    return new Promise((resolve,reject)=>{
     const xhr=new XMLHttpRequest()
     const formData=new FormData()
+    
+    const isPdf = file.type === "application/pdf"
+    const resourceType = isPdf ? "raw" : "image"
 
     formData.append("file",file)
     formData.append(
@@ -26,7 +29,7 @@ export const uploadCloudinary=(
 
     xhr.open(
         "POST",
-        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`
 
     )
 

@@ -1,25 +1,27 @@
-import { ServerCreate } from "../server/server-create";
+import { ServerCreateModal } from "../modal/server-create-modal";
 import { InviteModal } from "../modal/invite-modal";
-import { EditServer } from "../modal/edit-server-modal";
+import { EditServerModal } from "../modal/edit-server-modal";
 import { MembersModal } from "../modal/members-modal";
 import { CreateChannelModal } from "../modal/create-channel-modal";
 import { LeaveServerModal } from "../modal/leave-server-modal";
 import { DeleteServerModal } from "../modal/delete-server-modal";
 import { DeleteChannelModal } from "../modal/delete-channel-modal";
 import { EditChannelModal } from "../modal/edit-channel-modal";
+import { MessageFileModal } from "../modal/message-file-modal";
 
 export const ModalProvider=()=>{
   return (
     <>
-     <ServerCreate/>
+     <ServerCreateModal/>
      <InviteModal/> 
-     <EditServer/>
+     <EditServerModal/>
      <MembersModal/>
      <CreateChannelModal/>  
      <LeaveServerModal/>
      <DeleteServerModal/>
      <DeleteChannelModal/>
      <EditChannelModal/>
+     <MessageFileModal/>
     </>
   )
 }
