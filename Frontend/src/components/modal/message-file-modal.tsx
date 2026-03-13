@@ -1,5 +1,5 @@
 import { useModal } from "store/use-modal-store"
-import { useServerEdit } from "@/hooks/server/use-server-edit"
+import { useChatFile } from "@/hooks/chat/use-chat-file"
 import {useForm} from "react-hook-form"
 import * as z from "zod"
 import {zodResolver} from "@hookform/resolvers/zod"
@@ -21,31 +21,36 @@ import {
 } from "../ui/form"
 
 const formSchema=z.object({
-  name:z.string().min(1,{message:"Server name is required"}),
-  imageUrl:z.string().min(1,{message:"Server image is required"})
+  fileUrl:z.string().min(1,{message:"Attachment is required"})
 })
 
 export const MessageFileModal=()=>{
-  const serverEdit=useServerEdit()
+  const chatFile = useChatFile()
   const { isOpen,onClose,type,data }=useModal() 
   
   const isModalOpen=isOpen && type === "messageFile"
-  const {server} = data
+  const {query} = data
+  const channelId=query?.channelId
+  const serverId=query?.serverId
 
   const form=useForm({
     resolver:zodResolver(formSchema),
     defaultValues:{
-      imageUrl:""
+      fileUrl:""
     }
   })
   
-  const isLoading = serverEdit.isPending
+  const isLoading = chatFile.isPending
   
-  const onSubmit = (values:z.infer<typeof formSchema>)=>{
-    serverEdit.mutate({values,serverId:server?.id})
+  const onSubmit = async(values:z.infer<typeof formSchema>)=>{
+    const chat = await chatFile.mutateAsync({
+      values,
+      channelId,
+      serverId
+    })
 
     form.reset()
-    onClose()
+    if(chat) onClose()
   }
   
   const handleClose = ()=>{
@@ -70,7 +75,7 @@ export const MessageFileModal=()=>{
                <div className="flex items-center justify-center text-center">
                   <FormField
                    control={form.control}
-                   name="imageUrl"
+                   name="fileUrl"
                    render={({field})=>(
                      <FormItem>
                         <FormControl>

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useChatInput } from "@/hooks/chat/use-chat-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useModal } from "store/use-modal-store";
+import { EmojiPicker } from "../emoji-picker";
 import {
  Form,
  FormControl,
@@ -10,10 +11,9 @@ import {
  FormItem
 } from "../ui/form"
 import { Input } from "../ui/input";
-import { Plus,Smile } from "lucide-react";
+import { Plus } from "lucide-react";
 
 interface ChatInputProps {
-  apiUrl: string
   serverId: string;
   channelId: string;
   name?: string;
@@ -25,7 +25,6 @@ const formSchema = z.object({
 })
 
 export const ChatInput=({
-  apiUrl,
   channelId,
   serverId,
   name,
@@ -44,6 +43,7 @@ export const ChatInput=({
 
  const onSubmit = async(values: z.infer<typeof formSchema>)=>{
   await chatInput.mutateAsync({values,channelId,serverId})
+  form.reset()
  }
 
  return (
@@ -58,7 +58,7 @@ export const ChatInput=({
             <div className="relative p-4 pb-6">
               <button
                type="button"
-               onClick={() => onOpen("messageFile" , {apiUrl,query:{serverId,channelId}})}
+               onClick={() => onOpen("messageFile" , {query:{serverId,channelId}})}
                className="absolute top-7 left-8 h-6 w-6
                bg-zinc-400 hover:bg-zinc-300 transition rounded-full
                p-1 flex items-center justify-center"
@@ -74,7 +74,9 @@ export const ChatInput=({
                {...field}
               />
               <div className="absolute top-7 right-8">
-                <Smile className="cursor-pointer"/>
+                <EmojiPicker 
+                 onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
+                />
               </div>
             </div>
           </FormControl>  

@@ -10,7 +10,6 @@ interface ModalData {
   server?: ServerProps;
   channel?: Channels;
   channelType?: ChannelType;
-  apiUrl?: string;
   query?: Record<string,any>;
 }
 
