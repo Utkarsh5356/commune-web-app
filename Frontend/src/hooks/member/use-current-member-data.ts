@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MemberRole } from "../server/use-server-data";
 import axios from "axios"
 
-interface MemberData {
+export interface MemberData {
   id: string;
   role: MemberRole;
   profileId: string;
