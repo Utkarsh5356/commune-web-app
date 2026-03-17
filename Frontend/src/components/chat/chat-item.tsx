@@ -2,6 +2,7 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { MemberData } from "@/hooks/member/use-current-member-data";
 import type { Profile } from "@/hooks/profile/use-currentProfile";
+import { useMessageEdit } from "@/hooks/message/use-message-edit";
 import { UserAvatar } from "../user-avatar";
 import { Image } from "@unpic/react";
 import { ActionTooltip } from "../action-tooltip";
@@ -12,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { Input } from "../ui/input"
 import { Button } from "../ui/button";
+import { useModal } from "store/use-modal-store";
 import {
  Form,
  FormControl,
@@ -52,10 +54,13 @@ export const ChatItem = ({
   fileUrl,
   deleted,
   currentMember,
-  isUpdated  
+  isUpdated,
+  serverId,
+  channelId  
 }: ChatItemProps) => {
+  const messageEdit = useMessageEdit()
   const [isEditing,setIsEditing]=useState(false)
-  const [isDeleting,setIsDeleting]=useState(false)
+  const { onOpen }=useModal()
   
   useEffect(()=>{
    const handleKeyDown = (e: any) => {
@@ -74,9 +79,12 @@ export const ChatItem = ({
     content: content
    }
   })
-
-  const onSubmit = (values)=>{
-    console.log(values)
+  
+  const isLoading = messageEdit.isPending
+  const onSubmit = async(values: z.infer<typeof formSchema>)=>{
+    await messageEdit.mutateAsync({values,id,channelId,serverId})
+    form.reset()
+    setIsEditing(false)
   }
   
   useEffect(()=>{
@@ -174,6 +182,7 @@ export const ChatItem = ({
                  <FormControl>
                    <div className="relative w-full">
                      <Input
+                      disabled={isLoading}
                       className="p-2 bg-zinc-700/75 border-none border-0
                       focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-200"
                       placeholder="Edited message"
@@ -184,7 +193,10 @@ export const ChatItem = ({
                </FormItem>
              )}
            />
-           <Button className="cursor-pointer" size="sm" variant="primary">
+           <Button 
+            disabled={isLoading} 
+            className="cursor-pointer" size="sm" variant="primary"
+           >
              Save
            </Button>
           </form>
@@ -209,6 +221,7 @@ export const ChatItem = ({
          )}
          <ActionTooltip label="Delete">
             <Trash
+             onClick={()=>{onOpen("deleteMessage", {messageId:id, query:{channelId,serverId}})}}
              className="cursor-pointer ml-auto w-4 h-4 text-zinc-500
              hover:text-zinc-300 transition"
             />
