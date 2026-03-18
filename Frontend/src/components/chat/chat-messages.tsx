@@ -2,12 +2,13 @@ import { Fragment } from "react";
 import { format } from "date-fns"
 import { type MemberData } from "@/hooks/member/use-current-member-data"; 
 import { type Profile } from "@/hooks/profile/use-currentProfile";
+import { useChatSocket } from "@/hooks/chat/use-chat-socket";
 import { ChatWelcome } from "./chat-welcome";
 import { ChatItem } from "./chat-item";
 import { useChatQuery } from "@/hooks/chat/use-chat-query";
 import { Loader2,ServerCrash } from "lucide-react";
 
-interface Message {
+export interface Message {
   id: string;
   content: string;
   fileUrl: string | null;
@@ -48,6 +49,9 @@ export const ChatMessages=({
   type  
 }:ChatMessagesProps)=>{
   const queryKey = `chat:${chatId}`
+  const addKey = `chat:${chatId}:messages`
+  const updateKey = `chat:${chatId}:messages:update`
+
   const {
     data,
     fetchNextPage,
@@ -60,6 +64,8 @@ export const ChatMessages=({
     paramValue
   })
   
+  useChatSocket({queryKey, addKey, updateKey})
+
   if(status === "pending"){
     return (
       <div className="flex flex-col flex-1 justify-center items-center h-full w-full">

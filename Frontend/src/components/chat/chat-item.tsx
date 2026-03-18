@@ -1,5 +1,6 @@
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 import type { MemberData } from "@/hooks/member/use-current-member-data";
 import type { Profile } from "@/hooks/profile/use-currentProfile";
 import { useMessageEdit } from "@/hooks/message/use-message-edit";
@@ -59,9 +60,16 @@ export const ChatItem = ({
   channelId  
 }: ChatItemProps) => {
   const messageEdit = useMessageEdit()
+  const navigate=useNavigate()
   const [isEditing,setIsEditing]=useState(false)
   const { onOpen }=useModal()
   
+  const onMemberClick=()=>{
+    if(member.id === currentMember?.id) return
+
+    navigate(`/channels/${serverId}/member/${member.id}`)
+  }
+
   useEffect(()=>{
    const handleKeyDown = (e: any) => {
     if(e.key === "Escape" || e.keyCode === 27) {
@@ -107,13 +115,13 @@ export const ChatItem = ({
     <div className="relative group flex items-center hover:bg-black/5 p-4
     transition w-full">
      <div className="group flex gap-x-2 items-start w-full">
-      <div className="cursor-pointer hover:drop-shadow-md transition"> 
+      <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition"> 
        <UserAvatar src={member.profile.imageUrl}/>  
       </div>
       <div className="flex flex-col pt-2 w-full">
        <div className="flex items-center gap-x-2">
         <div className="flex items-center">
-         <p className="font-semibold font-mono text-md hover:underline cursor-pointer">
+         <p onClick={onMemberClick} className="font-semibold font-mono text-md hover:underline cursor-pointer">
           {member.profile.name}
          </p>
          <ActionTooltip label={member.role}>

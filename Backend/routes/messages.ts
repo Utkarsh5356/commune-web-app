@@ -262,7 +262,7 @@ messages.patch("/",async(req: Request,res: Response) => {
     }
   })
 
-  const updateKey = `chat:${channelId}:message:update`
+  const updateKey = `chat:${channelId}:messages:update`
   io.emit(updateKey, editMessage)
 
   res.json(editMessage)
@@ -368,7 +368,7 @@ messages.delete("/",async(req: Request,res: Response) => {
     }
   })
 
-  const updateKey = `chat:${channelId}:message:update`
+  const updateKey = `chat:${channelId}:messages:update`
   io.emit(updateKey, deleteMessage)
 
   res.json(deleteMessage)
