@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { useEffect, Fragment, useRef } from "react";
 import { format } from "date-fns"
 import { type MemberData } from "@/hooks/member/use-current-member-data"; 
 import { type Profile } from "@/hooks/profile/use-currentProfile";
@@ -51,7 +51,11 @@ export const ChatMessages=({
   const queryKey = `chat:${chatId}`
   const addKey = `chat:${chatId}:messages`
   const updateKey = `chat:${chatId}:messages:update`
-
+  
+  const chatRef = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const topRef = useRef<HTMLDivElement>(null)
+  
   const {
     data,
     fetchNextPage,
@@ -65,6 +69,22 @@ export const ChatMessages=({
   })
   
   useChatSocket({queryKey, addKey, updateKey})
+   
+  useEffect(() => {
+   bottomRef.current?.scrollIntoView({behavior: "smooth"})
+  },[data?.pages?.[0]?.items?.[0]])
+  
+  useEffect(()=>{
+   const observer = new IntersectionObserver((entries) => {
+    if(entries[0].isIntersecting && hasNextPage && !isFetchingNextPage){
+      fetchNextPage()
+    }
+   })
+   
+   if(topRef.current) observer.observe(topRef.current)
+    
+   return () => observer.disconnect()   
+  },[hasNextPage, isFetchingNextPage, fetchNextPage])
 
   if(status === "pending"){
     return (
@@ -90,12 +110,20 @@ export const ChatMessages=({
 
 
   return (
-    <div className="flex-1 flex flex-col h-full py-4 overflow-y-auto">
-      <div className="flex-1"/>
-      <ChatWelcome
+    <div ref={chatRef} className="flex-1 flex flex-col h-full py-4 overflow-y-auto">
+      <div ref={topRef}/>
+       
+      {isFetchingNextPage && (
+       <div className="flex justify-center">
+         <Loader2 className="h-6 w-6 text-zinc-500 animate-spin my-4"/>
+       </div>
+      )}
+
+      {!hasNextPage && <div className="flex-1"/>}
+      {!hasNextPage && (<ChatWelcome
        type={type}
        name={name}
-      />
+      />)}
       <div className="flex flex-col-reverse mt-auto">
        {data?.pages?.map((group,i) => (
         <Fragment key={i}>
@@ -117,6 +145,7 @@ export const ChatMessages=({
         </Fragment>
        ))}
       </div>
+     <div ref={bottomRef}/>
     </div>
   )  
 }
