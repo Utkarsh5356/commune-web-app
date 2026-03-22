@@ -28,11 +28,10 @@ type MessageWithMemberWithProfile = Message & {
 interface ChatMessagesProps {
    name?: string;
    member?: MemberData;
-   chatId: string;
-   channelId: string;
-   serverId: string;
+   chatId?: string;
+   query: Record<string, string>
    paramKey: "channelId" | "conversationId";
-   paramValue: string;
+   paramValue?: string;
    type: "channel" | "conversation" 
 }
 
@@ -42,8 +41,7 @@ export const ChatMessages=({
   name,
   member,
   chatId,
-  channelId,
-  serverId,
+  query,
   paramKey,
   paramValue,
   type  
@@ -71,7 +69,13 @@ export const ChatMessages=({
   useChatSocket({queryKey, addKey, updateKey})
    
   useEffect(() => {
-   bottomRef.current?.scrollIntoView({behavior: "smooth"})
+   const topDiv = chatRef?.current
+   if(!topDiv) return  
+    
+   const distnaceFromBottom = topDiv.scrollHeight - topDiv.scrollTop - topDiv.clientHeight
+   const isNearBottom = distnaceFromBottom <= 100
+   
+   if(isNearBottom) bottomRef.current?.scrollIntoView({behavior: "smooth"})
   },[data?.pages?.[0]?.items?.[0]])
   
   useEffect(()=>{
@@ -110,7 +114,7 @@ export const ChatMessages=({
 
 
   return (
-    <div ref={chatRef} className="flex-1 flex flex-col h-full py-4 overflow-y-auto">
+    <div ref={chatRef} className="flex-1 flex flex-col h-full py-4 chat-scroll overflow-y-auto">
       <div ref={topRef}/>
        
       {isFetchingNextPage && (
@@ -138,8 +142,8 @@ export const ChatMessages=({
            deleted={message.deleted}
            timeStamp={format(new Date(message.createdAt), DATE_FORMAT)}
            isUpdated={message.updatedAt !== message.createdAt}
-           channelId={channelId}
-           serverId={serverId}
+           channelId={query.channelId}
+           serverId={query.serverId}
           />
          ))}
         </Fragment>

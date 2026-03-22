@@ -27,8 +27,7 @@ export const ChannelContent=()=>{
           name={channelData?.name}
           chatId={channelId}
           type="channel"
-          channelId={channelId}
-          serverId={serverId}
+          query={{channelId,serverId}}
           paramKey="channelId"
           paramValue={channelId}
          />
@@ -36,11 +35,9 @@ export const ChannelContent=()=>{
         <ChatInput
           name={channelData?.name}
           type="channel"
-          channelId= {channelId}
-          serverId= {serverId}
+          query={{channelId,serverId}}
         />
      </div>
     </div>
-    
   ) 
 }

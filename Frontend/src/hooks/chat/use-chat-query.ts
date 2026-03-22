@@ -6,7 +6,7 @@ import axios from "axios";
 interface ChatQueryProps {
    queryKey: string;
    paramKey: "channelId" | "conversationId"; 
-   paramValue: string;
+   paramValue?: string;
 }
 
 export const useChatQuery=({
@@ -18,6 +18,7 @@ export const useChatQuery=({
   const {getToken}=useAuth() 
 
   const fetchMessages=async ({pageParam = undefined}) => {
+    if(!paramValue) return
     const url = new URL("http://localhost:3000/api/v1/messages")
     url.searchParams.set(paramKey, paramValue)
     if(pageParam) url.searchParams.set("cursor", pageParam) 

@@ -14,8 +14,7 @@ import { Input } from "../ui/input";
 import { Plus } from "lucide-react";
 
 interface ChatInputProps {
-  serverId: string;
-  channelId: string;
+  query: Record<string,string>
   name?: string;
   type: "conversation" | "channel";
 }
@@ -25,13 +24,13 @@ const formSchema = z.object({
 })
 
 export const ChatInput=({
-  channelId,
-  serverId,
+  query,
   name,
   type  
 }:ChatInputProps)=>{
  const chatInput=useChatInput() 
  const { onOpen }=useModal()
+
  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,7 +41,7 @@ export const ChatInput=({
  const isLoading = chatInput.isPending
 
  const onSubmit = async(values: z.infer<typeof formSchema>)=>{
-  await chatInput.mutateAsync({values,channelId,serverId})
+  await chatInput.mutateAsync({values,query})
   form.reset()
  }
 
@@ -58,7 +57,7 @@ export const ChatInput=({
             <div className="relative p-4 pb-6">
               <button
                type="button"
-               onClick={() => onOpen("messageFile" , {query:{serverId,channelId}})}
+               onClick={() => onOpen("messageFile" , {query})}
                className="absolute top-7 left-8 h-6 w-6
                bg-zinc-400 hover:bg-zinc-300 transition rounded-full
                p-1 flex items-center justify-center"

@@ -5,6 +5,8 @@ import { getOrCreateConversation } from "@/hooks/use-conversation"
 import { MemberRole } from "@/hooks/server/use-server-data"
 import { useOutletContext } from "react-router"
 import { ChatHeader } from "@/components/chat/chat-header"
+import { ChatMessages } from "@/components/chat/chat-messages"
+import { ChatInput } from "@/components/chat/chat-input"
 
 interface MemberOneandTwoProps {
   id: string;
@@ -53,16 +55,34 @@ export const MemberContent=()=>{
     init()
   },[currentMember?.id,memberId])
 
-  if(currentMemberLoading || isLoading) return <Loader/>
+  if(!currentConversation || currentMemberLoading || isLoading) return <Loader/>
   
   return (
-    <div className="bg-[#313338] flex flex-col h-full">
-      <ChatHeader 
-       imageUrl={currentConversation?.memberTwo.profile.imageUrl}
-       name={currentConversation?.memberTwo.profile.name}
-       serverId={serverId}
-       type="conversation"
-      />
+    <div className="h-full">
+      <div className="bg-[#313338] flex flex-col h-full">
+        <ChatHeader 
+         imageUrl={currentConversation.memberTwo.profile.imageUrl}
+         name={currentConversation.memberTwo.profile.name}
+         serverId={serverId}
+         type="conversation"
+        />
+        <div className="flex-1 overflow-y-auto">
+         <ChatMessages
+          member={currentMember}
+          name={currentConversation.memberTwo.profile.name}
+          chatId={currentConversation.id}
+          type="conversation"
+          query={{conversationId: currentConversation.id}}
+          paramKey="conversationId"
+          paramValue={currentConversation.id}
+         />
+        </div>
+        <ChatInput
+          name={currentConversation.memberTwo.profile.name}
+          type="conversation"
+          query={{conversationId: currentConversation.id}}
+        />
+      </div>
     </div>
   )  
 }
