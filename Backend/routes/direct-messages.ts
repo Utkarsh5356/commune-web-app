@@ -2,26 +2,24 @@ import  Router  from "express";
 import { db } from "../lib/prismaclient.js";
 import { clerkMiddleware,getAuth } from "@clerk/express"
 import type {Response,Request} from "express";
-import { MemberRole, type Message } from "@prisma/client";
+import { MemberRole, type DirectMessage } from "@prisma/client";
 import { io } from "../socket/index.js";
 import { server } from "./server.js";
 
-export const messages=Router()
+export const directMessages=Router()
 
-messages.use(clerkMiddleware())
+directMessages.use(clerkMiddleware())
 
-messages.post("/",async(req: Request,res: Response)=>{
+directMessages.post("/",async(req: Request,res: Response)=>{
   const {isAuthenticated,userId}=getAuth(req)
   
   if(!isAuthenticated) return res.status(401).json("User is not authenticated")
   
   const {values}:{values:{content: string,fileUrl: string}}=req.body
-  const serverId= req.query.serverId as string
-  const channelId= req.query.channelId as string
+  const conversationId= req.query.conversationId as string
 
   if(!values) return res.status(400).json("Values is missing")
-  if(!serverId) return res.status(400).json("Server ID is missing")
-  if(!channelId) return res.status(400).json("Channel ID is missing")
+  if(!conversationId) return res.status(400).json("Conversation ID is missing")
 
   try{
     const profile=await db.profile.findUnique({
@@ -32,41 +30,47 @@ messages.post("/",async(req: Request,res: Response)=>{
     
    if(!profile) return res.status(500).json("Internal error")
    
-   const server=await db.server.findFirst({
+   const conversation = await db.conversation.findFirst({
     where: {
-      id: serverId,
-      members: {
-        some: {
-          profileId: profile.id  
+      id: conversationId,
+      OR: [
+        {
+          memberOne: {
+            profileId: profile.id
+          }  
+        },
+        {
+          memberTwo: {
+            profileId: profile.id
+          }   
         }
-      }  
+      ] 
     },
     include: {
-      members: true  
+      memberOne: {
+        include: {
+           profile: true 
+        }
+      },
+      memberTwo: {
+        include: {
+            profile: true
+        }
+      }   
     }
    })
-
-   if(!server) return res.status(404).json({message: "Server not found"})
    
-   const channel= await db.channel.findFirst({
-    where: {
-      id: channelId,
-      serverId: serverId  
-    }
-   })
+   if(!conversation) return res.status(404).json("Conversation not found")
 
-   if(!channel) return res.status(404).json({message: "Channel not found"})
- 
-   
-   const member= server.members.find((member) => member.profileId === profile.id) 
+   const member= conversation.memberOne.profileId === profile.id ? conversation.memberOne : conversation.memberTwo
    
    if(!member) return res.status(404).json({message: "Member not found"})
    
-   const message = await db.message.create({
+   const message = await db.directMessage.create({
      data: {
        content: values.content,
        fileUrl: values.fileUrl,
-       channelId,
+       conversationId,
        memberId: member.id  
      },
      include: {
@@ -78,7 +82,7 @@ messages.post("/",async(req: Request,res: Response)=>{
      }
    }) 
   
-  const channelKey = `chat:${channelId}:messages`
+  const channelKey = `chat:${conversationId}:messages`
   io.emit(channelKey, message)
 
   return res.status(200).json(message)
@@ -87,19 +91,19 @@ messages.post("/",async(req: Request,res: Response)=>{
   }  
 })
 
-messages.get("/", async(req: Request,res: Response) => {
+directMessages.get("/", async(req: Request,res: Response) => {
  const {isAuthenticated,userId}=getAuth(req)
   
  if(!isAuthenticated) return res.status(401).json("User is not authenticated")
  
  const MESSAGES_BATCH = 10
 
- const channelId = req.query.channelId as string
+ const conversationId = req.query.conversationId as string
  const cursor = req.query.cursor as string
 
- if(!channelId) return res.status(400).json("Channel ID is missing")
+ if(!conversationId) return res.status(400).json("Conversation ID is missing")
   
- let messages: Message[] = []
+ let messages: DirectMessage[] = []
  
  try{
   const profile=await db.profile.findUnique({
@@ -111,14 +115,14 @@ messages.get("/", async(req: Request,res: Response) => {
   if(!profile) return res.status(500).json("Internal error")
 
   if(cursor) {
-   messages = await db.message.findMany({
+   messages = await db.directMessage.findMany({
      take: MESSAGES_BATCH,
      skip: 1,
      cursor: {
        id: cursor
      },
      where: {
-      channelId
+      conversationId
      },
      include: {
        member: {
@@ -132,10 +136,10 @@ messages.get("/", async(req: Request,res: Response) => {
      } 
    })
   }else {
-   messages = await db.message.findMany({
+   messages = await db.directMessage.findMany({
     take: MESSAGES_BATCH,
     where: {
-      channelId
+      conversationId
     },
     include: {
       member: {
@@ -165,20 +169,18 @@ messages.get("/", async(req: Request,res: Response) => {
  }
 })
 
-messages.patch("/",async(req: Request,res: Response) => {
+directMessages.patch("/",async(req: Request,res: Response) => {
  const {isAuthenticated,userId}=getAuth(req)
   
  if(!isAuthenticated) return res.status(401).json("User is not authenticated")
  
- const messageId=req.query.messageId as string
- const serverId=req.query.serverId as string
- const channelId=req.query.channelId as string
- const {values}:{values: {content: string}}=req.body
+ const {values}:{values: {content: string}}=req.body 
+ const directMessageId=req.query.directMessageId as string
+ const conversationId=req.query.conversationId as string
  
  if(!values) return res.status(400).json("Values is missing")
- if(!messageId) return res.status(400).json("Message ID is missing")
- if(!serverId) return res.status(400).json("Server ID is missing")
- if(!channelId) return res.status(400).json("Channel ID is missing")
+ if(!directMessageId) return res.status(400).json("Direct Message ID is missing")
+ if(!conversationId) return res.status(400).json("Conversation ID is missing")
 
  try{
   const profile=await db.profile.findUnique({
@@ -189,37 +191,47 @@ messages.patch("/",async(req: Request,res: Response) => {
     
   if(!profile) return res.status(500).json("Internal error")
 
-  const server = await db.server.findFirst({
+  const conversation = await db.conversation.findFirst({
     where: {
-      id: serverId,
-      members: {
-        some: {
-          profileId: profile.id
+      id: conversationId,
+      OR: [
+       {
+        memberOne: {
+           profileId: profile.id 
         }
-      }
+       },
+       {
+        memberTwo: {
+           profileId: profile.id 
+        }
+       }
+      ]  
     },
     include: {
-      members: true
+       memberOne: {
+         include: {
+            profile: true
+         }
+       },
+       memberTwo: {
+         include: {
+            profile: true
+         }
+       } 
     }
   })
-  if(!server) return res.status(404).json("Server not found")
+  
+  if(!conversation) return res.status(404).json("Conversation not found")
 
-  const channel = await db.channel.findFirst({
-    where: {
-      id: channelId,
-      serverId: serverId
-    }
-  })
-  if(!channel) return res.status(404).json("Channel not found")
-  
-  const member = server.members.find((member) => member.profileId === profile.id)
-  
+
+  const member = conversation.memberOne.profileId === profile.id ? conversation.memberOne : conversation.memberTwo
+
   if(!member) return res.status(404).json("Member not found")
 
-  let message = await db.message.findFirst({
+  let directMessage = await db.directMessage.findFirst({
     where: {
-      id: messageId,
-      channelId: channelId,
+      id: directMessageId,
+      conversationId: conversationId,
     },
     include: {
       member: {
@@ -230,11 +242,11 @@ messages.patch("/",async(req: Request,res: Response) => {
     }
   })
   
-  if(!message || message.deleted) {
+  if(!directMessage || directMessage.deleted) {
     return res.status(404).json("Message not found")
   }
   
-  const isMessageOwner = message.memberId === member.id
+  const isMessageOwner = directMessage.memberId === member.id
   const isAdmin = member.role === MemberRole.ADMIN
   const isModerator = member.role === MemberRole.MODERATOR
   const canModify = isMessageOwner || isAdmin || isModerator
@@ -248,7 +260,7 @@ messages.patch("/",async(req: Request,res: Response) => {
 
   const editMessage = await db.message.update({
     where: {
-      id: messageId,
+      id: directMessageId,
     },
     data: {
       content: values.content
@@ -262,7 +274,7 @@ messages.patch("/",async(req: Request,res: Response) => {
     }
   })
 
-  const updateKey = `chat:${channelId}:messages:update`
+  const updateKey = `chat:${conversationId}:messages:update`
   io.emit(updateKey, editMessage)
 
   res.json(editMessage)
@@ -271,18 +283,16 @@ messages.patch("/",async(req: Request,res: Response) => {
  }
 })
 
-messages.delete("/",async(req: Request,res: Response) => {
+directMessages.delete("/",async(req: Request,res: Response) => {
  const {isAuthenticated,userId}=getAuth(req)
   
  if(!isAuthenticated) return res.status(401).json("User is not authenticated")
  
- const messageId=req.query.messageId as string
- const serverId=req.query.serverId as string
- const channelId=req.query.channelId as string
+ const directMessageId=req.query.directMessageId as string
+ const conversationId=req.query.conversationId as string
  
- if(!messageId) return res.status(400).json("Message ID is missing")
- if(!serverId) return res.status(400).json("Server ID is missing")
- if(!channelId) return res.status(400).json("Channel ID is missing")
+ if(!directMessageId) return res.status(400).json("Direct Message ID is missing")
+ if(!conversationId) return res.status(400).json("Conversation ID is missing")
 
  try{
   const profile=await db.profile.findUnique({
@@ -293,37 +303,47 @@ messages.delete("/",async(req: Request,res: Response) => {
     
   if(!profile) return res.status(500).json("Internal error")
 
-  const server = await db.server.findFirst({
+  const conversation = await db.conversation.findFirst({
     where: {
-      id: serverId,
-      members: {
-        some: {
-          profileId: profile.id
+      id: conversationId,
+      OR: [
+       {
+        memberOne: {
+           profileId: profile.id 
         }
-      }
+       },
+       {
+        memberTwo: {
+           profileId: profile.id 
+        }
+       }
+      ]  
     },
     include: {
-      members: true
+       memberOne: {
+         include: {
+            profile: true
+         }
+       },
+       memberTwo: {
+         include: {
+            profile: true
+         }
+       } 
     }
   })
-  if(!server) return res.status(404).json("Server not found")
-
-  const channel = await db.channel.findFirst({
-    where: {
-      id: channelId,
-      serverId: serverId
-    }
-  })
-  if(!channel) return res.status(404).json("Channel not found")
   
-  const member = server.members.find((member) => member.profileId === profile.id)
+  if(!conversation) return res.status(404).json("Conversation not found")
+
+
+  const member = conversation.memberOne.profileId === profile.id ? conversation.memberOne : conversation.memberTwo
 
   if(!member) return res.status(404).json("Member not found")
 
-  let message = await db.message.findFirst({
+  let directMessage = await db.directMessage.findFirst({
     where: {
-      id: messageId,
-      channelId: channelId,
+      id: directMessageId,
+      conversationId: conversationId,
     },
     include: {
       member: {
@@ -334,11 +354,11 @@ messages.delete("/",async(req: Request,res: Response) => {
     }
   })
   
-  if(!message || message.deleted) {
+  if(!directMessage || directMessage.deleted) {
     return res.status(404).json("Message not found")
   }
   
-  const isMessageOwner = message.memberId === member.id
+  const isMessageOwner = directMessage.memberId === member.id
   const isAdmin = member.role === MemberRole.ADMIN
   const isModerator = member.role === MemberRole.MODERATOR
   const canModify = isMessageOwner || isAdmin || isModerator
@@ -347,9 +367,9 @@ messages.delete("/",async(req: Request,res: Response) => {
     return res.status(404).json("Unauthorized")
   }
   
-  const deleteMessage = await db.message.update({
+  const deleteMessage = await db.directMessage.update({
     where: {
-      id: messageId,
+      id: directMessageId,
     },
     data: {
       fileUrl: null,
@@ -365,7 +385,7 @@ messages.delete("/",async(req: Request,res: Response) => {
     }
   })
 
-  const updateKey = `chat:${channelId}:messages:update`
+  const updateKey = `chat:${conversationId}:messages:update`
   io.emit(updateKey, deleteMessage)
 
   res.json(deleteMessage)
