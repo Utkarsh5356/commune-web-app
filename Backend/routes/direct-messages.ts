@@ -4,7 +4,6 @@ import { clerkMiddleware,getAuth } from "@clerk/express"
 import type {Response,Request} from "express";
 import { MemberRole, type DirectMessage } from "@prisma/client";
 import { io } from "../socket/index.js";
-import { server } from "./server.js";
 
 export const directMessages=Router()
 
@@ -258,7 +257,7 @@ directMessages.patch("/",async(req: Request,res: Response) => {
     return res.status(404).json("Unauthorized")
   }
 
-  const editMessage = await db.message.update({
+  const editMessage = await db.directMessage.update({
     where: {
       id: directMessageId,
     },
