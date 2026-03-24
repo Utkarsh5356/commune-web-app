@@ -1,4 +1,5 @@
 import { useMessageDelete } from "@/hooks/message/use-message-delete"
+import { useDirectMessageDelete } from "@/hooks/direct-message/use-direct-message-delete"
 import { useModal } from "store/use-modal-store"
 import { Button } from "../ui/button"
 import {
@@ -11,15 +12,20 @@ import {
 } from "../ui/dialog"
 
 export const DeleteMessageModal=()=>{
-  const messageDelete=useMessageDelete()  
+  const messageDelete = useMessageDelete() 
+  const directMessageDelete = useDirectMessageDelete() 
   const { isOpen,onClose,type,data }=useModal() 
-  const { messageId,query }=data
+  const { messageId,messageType,query }=data
 
   const isModalOpen=isOpen && type === "deleteMessage"
   
-  const deleteMessage=async()=>{
-    const deleteMessage=await messageDelete.mutateAsync({id: messageId,channelId: query?.channelId,serverId: query?.serverId})
+  const isLoading = messageType === "channel" ? messageDelete.isPending : directMessageDelete.isPending
 
+  const deleteMessage=async()=>{
+    const deleteMessage=
+      messageType === "channel" ? await messageDelete.mutateAsync({id: messageId,query})
+      :
+      await directMessageDelete.mutateAsync({id: messageId, query})
     if(deleteMessage) onClose()
   }
   
@@ -39,14 +45,14 @@ export const DeleteMessageModal=()=>{
           <DialogFooter className="bg-gray-100 rounded-b-sm -mx-6 -mb-6 px-6 py-4">
             <div className="flex items-center justify-between w-full">
               <Button
-                disabled={messageDelete.isPending}
+                disabled={isLoading}
                 onClick={onClose}
                 variant="ghost"
               >
                 Cancel
               </Button>
               <Button
-                disabled={messageDelete.isPending}
+                disabled={isLoading}
                 variant="primary"
                 onClick={()=>deleteMessage()}
               >

@@ -4,12 +4,14 @@ import { useAuth } from "@clerk/clerk-react"
 import axios from "axios";
 
 interface ChatQueryProps {
+   apiUrl: string
    queryKey: string;
    paramKey: "channelId" | "conversationId"; 
    paramValue?: string;
 }
 
 export const useChatQuery=({
+  apiUrl,
   queryKey,
   paramKey,
   paramValue  
@@ -19,7 +21,7 @@ export const useChatQuery=({
 
   const fetchMessages=async ({pageParam = undefined}) => {
     if(!paramValue) return
-    const url = new URL("http://localhost:3000/api/v1/messages")
+    const url = new URL(apiUrl)
     url.searchParams.set(paramKey, paramValue)
     if(pageParam) url.searchParams.set("cursor", pageParam) 
     const token=await getToken() 

@@ -29,6 +29,7 @@ interface ChatMessagesProps {
    name?: string;
    member?: MemberData;
    chatId?: string;
+   apiUrl: string;
    query: Record<string, string>
    paramKey: "channelId" | "conversationId";
    paramValue?: string;
@@ -44,6 +45,7 @@ export const ChatMessages=({
   query,
   paramKey,
   paramValue,
+  apiUrl,
   type  
 }:ChatMessagesProps)=>{
   const queryKey = `chat:${chatId}`
@@ -61,6 +63,7 @@ export const ChatMessages=({
     isFetchingNextPage,
     status
   } = useChatQuery({
+    apiUrl,
     queryKey,
     paramKey,
     paramValue
@@ -142,8 +145,8 @@ export const ChatMessages=({
            deleted={message.deleted}
            timeStamp={format(new Date(message.createdAt), DATE_FORMAT)}
            isUpdated={message.updatedAt !== message.createdAt}
-           channelId={query.channelId}
-           serverId={query.serverId}
+           type={type}
+           query={query}
           />
          ))}
         </Fragment>

@@ -1,6 +1,7 @@
 import * as z from "zod"
 import { useForm } from "react-hook-form";
 import { useChatInput } from "@/hooks/chat/use-chat-input";
+import { useDirectMessageInput } from "@/hooks/direct-message/use-direct-message-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useModal } from "store/use-modal-store";
 import { EmojiPicker } from "../emoji-picker";
@@ -28,7 +29,8 @@ export const ChatInput=({
   name,
   type  
 }:ChatInputProps)=>{
- const chatInput=useChatInput() 
+ const chatInput=useChatInput()
+ const directMessageInput=useDirectMessageInput() 
  const { onOpen }=useModal()
 
  const form = useForm<z.infer<typeof formSchema>>({
@@ -38,10 +40,13 @@ export const ChatInput=({
     }
  })
  
- const isLoading = chatInput.isPending
+ const isLoading = type === "channel" ? chatInput.isPending : directMessageInput.isPending
 
  const onSubmit = async(values: z.infer<typeof formSchema>)=>{
+  type === "channel" ? 
   await chatInput.mutateAsync({values,query})
+   :
+  await directMessageInput.mutateAsync({values,query})
   form.reset()
  }
 

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import type { MemberData } from "@/hooks/member/use-current-member-data";
 import type { Profile } from "@/hooks/profile/use-currentProfile";
 import { useMessageEdit } from "@/hooks/message/use-message-edit";
+import { useDirectMessageEdit } from "@/hooks/direct-message/use-direct-message-edit";
 import { UserAvatar } from "../user-avatar";
 import { Image } from "@unpic/react";
 import { ActionTooltip } from "../action-tooltip";
@@ -33,8 +34,8 @@ interface ChatItemProps {
   deleted: boolean;
   currentMember?: MemberData;
   isUpdated: boolean;
-  serverId: string;
-  channelId: string
+  type: "channel" | "conversation";
+  query: Record<string,string>
 }
 
 const roleIconMap = {
@@ -56,10 +57,11 @@ export const ChatItem = ({
   deleted,
   currentMember,
   isUpdated,
-  serverId,
-  channelId  
+  type,
+  query, 
 }: ChatItemProps) => {
   const messageEdit = useMessageEdit()
+  const directMessageEdit = useDirectMessageEdit()
   const navigate=useNavigate()
   const [isEditing,setIsEditing]=useState(false)
   const { onOpen }=useModal()
@@ -67,7 +69,7 @@ export const ChatItem = ({
   const onMemberClick=()=>{
     if(member.id === currentMember?.id) return
 
-    navigate(`/channels/${serverId}/member/${member.id}`)
+    navigate(`/channels/${query.serverId}/member/${member.id}`)
   }
 
   useEffect(()=>{
@@ -78,7 +80,7 @@ export const ChatItem = ({
    }
 
    window.addEventListener('keydown', handleKeyDown)
-   return () => window.removeEventListener('keyDown', handleKeyDown)
+   return () => window.removeEventListener('keydown', handleKeyDown)
   },[])
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -88,9 +90,11 @@ export const ChatItem = ({
    }
   })
   
-  const isLoading = messageEdit.isPending
+  const isLoading = type === "channel" ?  messageEdit.isPending : directMessageEdit.isPending
   const onSubmit = async(values: z.infer<typeof formSchema>)=>{
-    await messageEdit.mutateAsync({values,id,channelId,serverId})
+    type === "channel" ? await messageEdit.mutateAsync({values,id,query})
+    :
+    await directMessageEdit.mutateAsync({values,id,query})
     form.reset()
     setIsEditing(false)
   }
@@ -229,7 +233,7 @@ export const ChatItem = ({
          )}
          <ActionTooltip label="Delete">
             <Trash
-             onClick={()=>{onOpen("deleteMessage", {messageId:id, query:{channelId,serverId}})}}
+             onClick={()=>{onOpen("deleteMessage", {messageId: id, messageType: type, query})}}
              className="cursor-pointer ml-auto w-4 h-4 text-zinc-500
              hover:text-zinc-300 transition"
             />

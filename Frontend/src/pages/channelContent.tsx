@@ -27,6 +27,7 @@ export const ChannelContent=()=>{
           name={channelData?.name}
           chatId={channelId}
           type="channel"
+          apiUrl="http://localhost:3000/api/v1/messages"
           query={{channelId,serverId}}
           paramKey="channelId"
           paramValue={channelId}
