@@ -159,7 +159,6 @@ export const ServerSidebar=({userServerData,profileId}:ServerSidebarProps)=>{
               />
              ))}
            </div>
-           
           </div>
          )}
        </ScrollArea> 

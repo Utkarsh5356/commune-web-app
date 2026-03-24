@@ -6,6 +6,7 @@ import type { Profile } from "@/hooks/profile/use-currentProfile";
 import { useMessageEdit } from "@/hooks/message/use-message-edit";
 import { useDirectMessageEdit } from "@/hooks/direct-message/use-direct-message-edit";
 import { UserAvatar } from "../user-avatar";
+import { EmojiPicker } from "../emoji-picker";
 import { Image } from "@unpic/react";
 import { ActionTooltip } from "../action-tooltip";
 import { ShieldCheck,FileIcon,Edit,Trash } from "lucide-react";
@@ -195,12 +196,18 @@ export const ChatItem = ({
                    <div className="relative w-full">
                      <Input
                       disabled={isLoading}
-                      className="p-2 bg-zinc-700/75 border-none border-0
+                      className="p-2 pr-11 bg-zinc-700/75 border-none border-0
                       focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-200"
                       placeholder="Edited message"
                       {...field}
                      />
+                     <div className="absolute top-1.5 right-3">
+                       <EmojiPicker 
+                        onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
+                       />
+                     </div>
                    </div>
+                   
                  </FormControl>
                </FormItem>
              )}
