@@ -4,7 +4,6 @@ import { clerkMiddleware,getAuth } from "@clerk/express"
 import type {Response,Request} from "express";
 import { MemberRole, type Message } from "@prisma/client";
 import { io } from "../socket/index.js";
-import { server } from "./server.js";
 
 export const messages=Router()
 

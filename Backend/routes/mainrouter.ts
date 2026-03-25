@@ -6,6 +6,7 @@ import { member } from "./member.js"
 import { conversation } from "./conversation.js"
 import { messages } from "./messages.js"
 import { directMessages } from "./direct-messages.js"
+import { livekit } from "./livekit.js"
 
 export const mainrouter=Router()
 
@@ -16,3 +17,4 @@ mainrouter.use("/member",member)
 mainrouter.use("/conversation",conversation)
 mainrouter.use("/messages",messages)
 mainrouter.use("/direct-messages",directMessages)
+mainrouter.use("/livekit",livekit)
