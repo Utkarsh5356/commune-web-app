@@ -7,6 +7,8 @@ import { useOutletContext } from "react-router"
 import { ChatHeader } from "@/components/chat/chat-header"
 import { ChatMessages } from "@/components/chat/chat-messages"
 import { ChatInput } from "@/components/chat/chat-input"
+import { useSearchParams } from "react-router-dom"
+import { MediaRoom } from "@/components/media-room"
 
 interface MemberOneandTwoProps {
   id: string;
@@ -33,9 +35,10 @@ export const MemberContent=()=>{
   const {serverId,memberId}=useOutletContext<{serverId:string,memberId:string}>()
   const { data: currentMember, isLoading: currentMemberLoading }=useCurrentMemberData({serverId})
   const {getOrCreate} = getOrCreateConversation(currentMember?.id,memberId)
+  const [searchParams] = useSearchParams()
   const [currentConversation,setCurrentConversation]=useState<CurrentConversationProps>()
   const [isLoading,setIsLoading]=useState(true)
-
+  
   useEffect(()=>{
    if(!currentMember?.id) return 
 
@@ -63,26 +66,37 @@ export const MemberContent=()=>{
         <ChatHeader 
          imageUrl={currentConversation.memberTwo.profile.imageUrl}
          name={currentConversation.memberTwo.profile.name}
-         serverId={serverId}
          type="conversation"
         />
-        <div className="flex-1 overflow-y-auto">
-         <ChatMessages
-          member={currentMember}
-          name={currentConversation.memberTwo.profile.name}
-          chatId={currentConversation.id}
-          type="conversation"
-          apiUrl="http://localhost:3000/api/v1/direct-messages"
-          query={{conversationId: currentConversation.id}}
-          paramKey="conversationId"
-          paramValue={currentConversation.id}
-         />
-        </div>
-        <ChatInput
-          name={currentConversation.memberTwo.profile.name}
-          type="conversation"
-          query={{conversationId: currentConversation.id}}
-        />
+        {searchParams.get("video") && (
+          <MediaRoom
+            chatId={currentConversation.id}
+            video={true}
+            audio={true}
+          />
+        )}
+        {!searchParams.get("video") && (
+          <>
+           <div className="flex-1 overflow-y-auto">
+            <ChatMessages
+             member={currentMember}
+             name={currentConversation.memberTwo.profile.name}
+             chatId={currentConversation.id}
+             type="conversation"
+             apiUrl="http://localhost:3000/api/v1/direct-messages"
+             query={{conversationId: currentConversation.id}}
+             paramKey="conversationId"
+             paramValue={currentConversation.id}
+            />
+           </div>
+           <ChatInput
+             name={currentConversation.memberTwo.profile.name}
+             type="conversation"
+             query={{conversationId: currentConversation.id}}
+           />
+          </>
+        )}
+        
       </div>
     </div>
   )  
