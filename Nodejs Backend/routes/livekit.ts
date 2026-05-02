@@ -7,7 +7,7 @@ export const livekit = Router()
 livekit.get("/",async(req: Request,res: Response)=>{
   const room = req.query.room as string;
   const username = req.query.username as string
-
+  
   if(!room) return res.status(400).json({err: "Missing room in query parameter"})
   if(!username) return res.status(400).json({err: "Missing username in query parameter"})
 
