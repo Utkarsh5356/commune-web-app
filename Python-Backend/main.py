@@ -1,1 +1,37 @@
-from pydantic_settings import BaseSettings
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+from config import get_settings
+from database.database import engine
+
+settings = get_settings()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    await engine.dispose()
+
+app = FastAPI(
+    title="Commune AI (Gemini)",
+    description="Gemini-powered AI features for the Commune web app",
+    version="2.0.0",
+    lifespan=lifespan
+)
+
+origins = [o.strip() for o in settings.allowed_origins.split(",")]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+
+
+@app.get("/health")
+async def get_health():
+    return {"status": "ok", "service": "commune-ai-gemini"}
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="localhost", port=settings.port, reload=True)
