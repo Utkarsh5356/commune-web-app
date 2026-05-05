@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import create_async_engine,AsyncSession,async_sessio
 from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column,relationship
 from sqlalchemy import Text,String,Boolean,DateTime,Enum as SAEnum,ForeignKey,UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
+from pgvector.sqlalchemy import Vector
 from datetime import datetime,timezone
 from typing import Optional
 import enum
@@ -141,7 +142,7 @@ class Conversation(Base):
     directMessages: Mapped[list["DirectMessage"]] = relationship("DirectMessage", back_populates=None)
  
  
-# ---- New table: AiSummary (run migration after adding this) ----
+# ---- AiSummary table ----
  
 class AiSummary(Base):
     __tablename__ = "AiSummary"
@@ -160,3 +161,20 @@ class AiSummary(Base):
     requestedBy: Mapped[str] = mapped_column(String, ForeignKey("Profile.id", ondelete="CASCADE"))
     profile: Mapped["Profile"] = relationship("Profile")
     createdAt: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc))   
+    
+
+# ---- RAG: Message embeddings table ----    
+
+
+class MessageEmbedding(Base):
+    __tablename__ = "MessageEmbedding"
+ 
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    messageId: Mapped[str] = mapped_column(String, ForeignKey("Message.id", ondelete="CASCADE"), unique=True)
+    channelId: Mapped[str] = mapped_column(String, ForeignKey("Channel.id", ondelete="CASCADE"))
+    content: Mapped[str] = mapped_column(Text)
+    embedding = mapped_column(Vector(768))   # Gemini text-embedding-004 = 768 dims
+    createdAt: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+ 
+    message: Mapped["Message"] = relationship("Message")
+    channel: Mapped["Channel"] = relationship("Channel")  
