@@ -8,8 +8,9 @@ class Settings(BaseSettings):
     allowed_origins: str = "http://localhost:5173"
     port: int = 8080
     
-    gemini_main_model: str = "gemini-1.5-pro"
-    gemini_fast_model: str = "gemini-1.5-flash"
+    gemini_main_model: str = "gemini-2.5-pro"
+    gemini_fast_model: str = "gemini-2.5-flash"
+    gemini_embedding_model: str = "gemini-embedding-001"
     
     class Config:
         env_file = ".env"
