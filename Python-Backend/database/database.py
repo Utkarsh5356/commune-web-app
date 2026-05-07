@@ -1,7 +1,6 @@
-from sqlalchemy.ext.asyncio import create_async_engine,AsyncSession,async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine,async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column,relationship
-from sqlalchemy import Text,String,Boolean,DateTime,Enum as SAEnum,ForeignKey,UniqueConstraint
-from sqlalchemy.dialects.postgresql import UUID as PGUUID
+from sqlalchemy import Text,String,Boolean,DateTime,Enum as SAEnum,ForeignKey
 from pgvector.sqlalchemy import Vector
 from datetime import datetime,timezone
 from typing import Optional

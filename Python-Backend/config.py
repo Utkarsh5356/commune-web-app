@@ -4,7 +4,7 @@ from functools import lru_cache
 class Settings(BaseSettings):
     database_url: str
     gemini_api_key: str
-    clerk_pem_public_key: str
+    clerk_jwks_url: str
     allowed_origins: str = "http://localhost:5173"
     port: int = 8080
     
