@@ -7,6 +7,7 @@ import httpx
 import tempfile
 import os
 import time
+import asyncio
 from google import genai
 from google.genai import types
 from config import get_settings
@@ -89,5 +90,52 @@ class IndexChannelRequest(BaseModel):
     
 # Media helpers       
 
- 
-                
+async def _fetch_bytes(url: str) -> tuple[bytes, str]:
+    async with httpx.AsyncClient(timeout=120.0) as http:
+        resp = await http.get(url, follow_redirects=True)
+        resp.raise_for_status() 
+        return resp.content, resp.headers.get("content-type", "application/octet-stream").split(";")[0].strip()
+
+async def _upload_video(url: str):
+    data, content_type = await _fetch_bytes(url)
+    mime_map = {
+        "video/mp4": (".mp4", "video/mp4"),
+        "video/webm": (".webm", "video/webm"),
+        "video/quicktime": (".mov", "video/quicktime"),
+        "video/avi": (".avi", "video/avi"),
+    }
+    ext, mime = mime_map.get(content_type, (".mp4", "video/mp4"))
+    with tempfile.NamedTemporaryFile(suffix=ext, delete=False) as tmp:
+        tmp.write(data)
+        tmp_path = tmp.name
+    try:
+        client = get_client()
+        gfile = client.files.upload(
+            path=tmp_path,
+            config={"mime_type": mime}
+        )
+        
+        for _ in range(30):
+            if gfile.state.name != "PROCESSING":
+                break
+            await asyncio.sleep(3)
+            gfile = client.files.get(name=gfile.name)
+        if gfile.state.name == "FAILED":
+            raise ValueError("Gemini video processing failed")
+        return gfile 
+    finally:
+        os.unlink(tmp_path) 
+
+def _build_gemini_history(history: list[HistoryMessage]) -> list[types.Content]:
+    result = []
+    for msg in  history[-20:]:
+        text = msg.text
+        if msg.media_url and msg.media_type:
+            text = f"[User shared a {msg.media_type}]\n{text}"
+        result.append(types.Content(
+            role=msg.role,
+            parts=[types.Part(text=text)]
+        ))
+    return result 
+
+@router.post("/commune-ai/chat", response_model=ChatResponse)                                        

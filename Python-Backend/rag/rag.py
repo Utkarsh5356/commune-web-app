@@ -3,40 +3,46 @@ from sqlalchemy import select, text, desc
 from typing import Optional
 from database.database import MessageEmbedding, Message, Member, Profile
 from gemini_client import get_client, get_embedding_model
+import asyncio
 
 TOP_K = 8
 MIN_SIMILARITY = 0.6
 EMBEDDING_DIMS = 768 # gemini-embedding-001 model outputs 768 dims
 
-def embed_text(text_content: str) -> list[float]:
+async def embed_text(text_content: str) -> list[float]:
     # Embed a document for indexing.
-    
-    client = get_client()
-    result = client.models.embed_content(
-        model = get_embedding_model(),
-        contents = text_content,
-        config = {
-            'task_type': "RETRIEVAL_DOCUMENT",
-            'output_dimensionality': EMBEDDING_DIMS
-        } 
-    )
-    
-    return result.embeddings[0].values
+  def _call():  
+      client = get_client()
+      result = client.models.embed_content(
+          model = get_embedding_model(),
+          contents = text_content,
+          config = {
+              'task_type': "RETRIEVAL_DOCUMENT",
+              'output_dimensionality': EMBEDDING_DIMS
+          } 
+      )
+      
+      return result.embeddings[0].values
+  return await asyncio.get_event_loop().run_in_executor(None, _call)
 
-def embed_query(query: str) -> list[float]:
+async def embed_query(query: str) -> list[float]:
     # Embed a user query for retrieval.
-    
-    client = get_client()
-    result = client.models.embed_content(
-        model = get_embedding_model(),
-        contents = query,
-        config = {
-            'task_type': "RETRIEVAL_QUERY",
-            'output_dimensionality': EMBEDDING_DIMS
-        }
-    )
-    
-    return result.embeddings[0].values
+    def _call():  
+        client = get_client()
+        result = client.models.embed_content(
+            model = get_embedding_model(),
+            contents = query,
+            config = {
+                'task_type': "RETRIEVAL_QUERY",
+                'output_dimensionality': EMBEDDING_DIMS
+            }
+        )
+        
+        return result.embeddings[0].values
+    return await asyncio.get_event_loop().run_in_executor(None, _call)
+
+def _vec_to_str(vector: list[float]) -> str:
+    return "[" + ",".join(str(v) for v in vector) + "]"
 
 async def index_message(
     db: AsyncSession,
@@ -56,7 +62,7 @@ async def index_message(
         return False
     
     try:
-        vector = embed_text(content)
+        vector = await embed_text(content)
     except Exception:
         return False
     
@@ -100,7 +106,7 @@ async def index_channel_messages(
             continue
         try:
             indexed_content = f"{msg.member.profile.name}: {msg.content}"
-            vector = embed_text(indexed_content)
+            vector = await embed_text(indexed_content)
             db.add(MessageEmbedding(
                 messageId = msg.id,
                 channelId = channel_id,
@@ -124,7 +130,7 @@ async def retrieve_relevant_messages(
     top_k: int = TOP_K
 ) -> list[str]:
     try:
-        query_vector = embed_query(query)
+        query_vector = await embed_query(query)
     except Exception:
         return []
     
@@ -132,13 +138,13 @@ async def retrieve_relevant_messages(
         sql = text(""" 
             SELECT content, 1 - (embedding <=> :query_vec::vector) AS similarity
             FROM "MessageEmbedding"
-            Where "channelId" = :channel_id
+            WHERE "channelId" = :channel_id
                 AND 1 - (embedding <=> :query_vec::vector) > :min_sim
             ORDER BY embedding <=> :query_vec::vector
             LIMIT :top_k    
         """)
         params = {
-            "query_vec": str(query_vector),
+            "query_vec": _vec_to_str(query_vector),
             "channel_id": channel_id,
             "min_sim": MIN_SIMILARITY,
             "top_k": top_k
@@ -154,7 +160,7 @@ async def retrieve_relevant_messages(
             LIMIT :top_k    
         """) 
         params = {
-            "query_vec": str(query_vector),
+            "query_vec": _vec_to_str(query_vector),
             "server_id": server_id,
             "min_sim": MIN_SIMILARITY,
             "top_k": top_k
@@ -168,10 +174,9 @@ def format_context(relevant_messages: list[str]) -> str:
     if not relevant_messages:
         return ""
     lines = "\n".join(f"- {msg}" for msg in relevant_messages)   
-    return f"""
-        ## Relevant channel history (retrieved for this question):
-        {lines}
-        
-        Use the above context to answer accurately. Cite who said what.
-        If the answer isn't in the context, answer from general knowledge.
-    """                 
+    return (
+        "## Relevant channel history (retrieved for this question):\n"
+        f"{lines}\n\n"
+        "Use the above context to answer accurately. Cite who said what.\n"
+        "If the answer isn't in the context, answer from general knowledge."
+    )                 
