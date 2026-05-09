@@ -10,7 +10,8 @@ MIN_SIMILARITY = 0.6
 EMBEDDING_DIMS = 768 # gemini-embedding-001 model outputs 768 dims
 
 async def embed_text(text_content: str) -> list[float]:
-    # Embed a document for indexing.
+  # Embed a document for indexing.
+  
   def _call():  
       client = get_client()
       result = client.models.embed_content(
@@ -23,7 +24,7 @@ async def embed_text(text_content: str) -> list[float]:
       )
       
       return result.embeddings[0].values
-  return await asyncio.get_event_loop().run_in_executor(None, _call)
+  return await asyncio.to_thread(_call)
 
 async def embed_query(query: str) -> list[float]:
     # Embed a user query for retrieval.
@@ -39,7 +40,7 @@ async def embed_query(query: str) -> list[float]:
         )
         
         return result.embeddings[0].values
-    return await asyncio.get_event_loop().run_in_executor(None, _call)
+    return await asyncio.to_thread(_call)
 
 def _vec_to_str(vector: list[float]) -> str:
     return "[" + ",".join(str(v) for v in vector) + "]"
