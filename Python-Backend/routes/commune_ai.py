@@ -252,7 +252,7 @@ async def index_channel(
     profile: Profile = Depends(get_current_profile),
     db: AsyncSession = Depends(get_db)
 ):
-    server_result = db.execute(
+    server_result = await db.execute(
         select(Server)
         .where(Server.id == body.server_id)
         .join(Server.members)

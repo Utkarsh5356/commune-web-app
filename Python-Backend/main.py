@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from config import get_settings
 from database.database import engine
+from routes.commune_ai import router as commune_ai_router
 
 settings = get_settings()
 
@@ -27,11 +28,11 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-
+app.include_router(commune_ai_router, prefix="/api/v1/ai", tags=["CommuneAI"])
 
 @app.get("/health")
 async def get_health():
     return {"status": "ok", "service": "commune-ai-gemini"}
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="localhost", port=settings.port, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=settings.port, reload=True)
