@@ -1,7 +1,7 @@
 import { useAuth } from "@clerk/clerk-react"
 import axios from "axios"
 
-const AI_BASE = "http://127.0.0.1:8000/api/v1/ai"
+const AI_BASE = "http://127.0.0.1:8080/api/v1/ai"
 
 export const useAi = () => {
   const { getToken } = useAuth()
