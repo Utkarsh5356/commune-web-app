@@ -135,33 +135,36 @@ async def retrieve_relevant_messages(
     except Exception:
         return []
     
+    if not channel_id and not server_id:
+        return []
+    
+    vec_lit = "'" + _vec_to_str(query_vector) + "'::vector"
+    
     if channel_id:
-        sql = text(""" 
-            SELECT content, 1 - (embedding <=> :query_vec::vector) AS similarity
+        sql = text(f""" 
+            SELECT content, 1 - (embedding <=> {vec_lit}) AS similarity
             FROM "MessageEmbedding"
             WHERE "channelId" = :channel_id
-                AND 1 - (embedding <=> :query_vec::vector) > :min_sim
-            ORDER BY embedding <=> :query_vec::vector
+                AND 1 - (embedding <=> {vec_lit}) > :min_sim
+            ORDER BY embedding <=> {vec_lit}
             LIMIT :top_k    
         """)
         params = {
-            "query_vec": _vec_to_str(query_vector),
             "channel_id": channel_id,
             "min_sim": MIN_SIMILARITY,
             "top_k": top_k
         }
     else:
-        sql = text(""" 
-            SELECT me.content, 1 - (me.embedding <=> :query_vec::vector) AS similarity
+        sql = text(f""" 
+            SELECT me.content, 1 - (me.embedding <=> {vec_lit}) AS similarity
             FROM "MessageEmbedding" me
             JOIN "Channel" c ON me."channelId" = c.id
             WHERE c."serverId" = :server_id
-                AND 1 - (me.embedding <=> :query_vec::vector) > :min_sim
-            ORDER BY me.embedding <=> :query_vec::vector
+                AND 1 - (me.embedding <=> {vec_lit}) > :min_sim
+            ORDER BY me.embedding <=> {vec_lit}
             LIMIT :top_k    
         """) 
         params = {
-            "query_vec": _vec_to_str(query_vector),
             "server_id": server_id,
             "min_sim": MIN_SIMILARITY,
             "top_k": top_k

@@ -4,15 +4,29 @@ from sqlalchemy import Text,String,Boolean,DateTime,Enum as SAEnum,ForeignKey
 from pgvector.sqlalchemy import Vector
 from datetime import datetime,timezone
 from typing import Optional
+from urllib.parse import urlparse
+import ssl
 import enum
 import uuid
 
 from config import get_settings
 settings = get_settings()
 
-#asyncpg driver
-_async_url = settings.database_url.replace("postgresql://", "postgresql+asyncpg://")
-engine = create_async_engine(_async_url, echo=False, pool_pre_ping=True)
+_parsed = urlparse(settings.database_url)
+_clean_url = _parsed._replace(query="").geturl()
+_async_url = _clean_url.replace("postgresql://", "postgresql+asyncpg://")
+ 
+# SSL context for NeonDB
+_ssl_context = ssl.create_default_context()
+_ssl_context.check_hostname = False
+_ssl_context.verify_mode = ssl.CERT_NONE
+ 
+engine = create_async_engine(
+    _async_url,
+    echo=False,
+    pool_pre_ping=True,
+    connect_args={"ssl": _ssl_context},
+)
 AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
 async def get_db():
