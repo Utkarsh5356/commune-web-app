@@ -4,6 +4,7 @@ import { Separator } from "../ui/separator"
 import { NavigationAction } from "./navigation-action"
 import { ScrollArea } from "../ui/scroll-area"
 import { NavigationItem } from "./navigation-item"
+import { NavigationAI } from "./navigation-ai"
 import { HeaderIcon } from "../header-icon"
 import { UserButton } from "@clerk/clerk-react"
 import { type Servers } from "@/hooks/server/use-all-servers"
@@ -34,6 +35,7 @@ export const ServerNavigation=({serverData}:{serverData:Servers[] | undefined})=
         </div>
        ))}
       </ScrollArea>
+      <NavigationAI/>
       <NavigationAction/>
       <div className="relative group flex mx-3 h-12 w-12 rounded-3xl 
        group-hover:rounded-2xl transition-all overflow-hidden"
