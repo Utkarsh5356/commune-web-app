@@ -1,5 +1,4 @@
 import { Loader2, ChevronDown } from "lucide-react"
-import { useServerChannels } from "@/hooks/server/use-server-channels"
 import type { Servers } from "@/hooks/server/use-all-servers"
 
 interface CommuneAiHeaderProps {
@@ -21,20 +20,12 @@ export const CommuneAiHeader = ({
   onSelectServer,
   onSelectChannel,
 }: CommuneAiHeaderProps) => {
-  const { channels, loading: channelsLoading, fetchChannels, clearChannels } = useServerChannels()
-
-  const handleServerChange = (serverId: string | null) => {
-    onSelectServer(serverId)
-    if (serverId) {
-      fetchChannels(serverId)
-    } else {
-      clearChannels()
-    }
-  }
+  const selectedServer = servers?.find(s => s.id === selectedServerId)
+  const textChannels = selectedServer?.channels?.filter((ch: any) => ch.type === "TEXT") ?? []
 
   return (
     <div className="flex-shrink-0 border-b-2 border-neutral-800 bg-[#313338]">
-      {/* Main header row */}
+      {/* Title row */}
       <div className="flex items-center h-12 px-4 gap-3">
         <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600
           flex items-center justify-center flex-shrink-0">
@@ -42,9 +33,9 @@ export const CommuneAiHeader = ({
             <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="white"/>
           </svg>
         </div>
-
+ 
         <p className="font-mono font-semibold text-md text-white">CommuneAI</p>
-
+ 
         <div className="ml-auto flex items-center gap-3">
           {indexing && (
             <div className="flex items-center gap-1.5 text-xs text-zinc-400">
@@ -65,16 +56,19 @@ export const CommuneAiHeader = ({
           </div>
         </div>
       </div>
-
+ 
       {/* RAG scope row */}
       <div className="flex items-center gap-2 px-4 pb-2.5">
         <span className="text-[11px] text-zinc-500 font-mono">context:</span>
-
+ 
         {/* Server select */}
         <div className="relative">
           <select
             value={selectedServerId ?? ""}
-            onChange={e => handleServerChange(e.target.value || null)}
+            onChange={e => {
+              onSelectServer(e.target.value || null)
+              onSelectChannel(null)
+            }}
             className="appearance-none pl-2 pr-6 py-1 rounded text-xs bg-zinc-700/60
               border border-zinc-600/50 text-zinc-300 focus:outline-none
               focus:border-indigo-500/60 transition cursor-pointer"
@@ -87,36 +81,26 @@ export const CommuneAiHeader = ({
           <ChevronDown className="absolute right-1.5 top-1/2 -translate-y-1/2
             w-3 h-3 text-zinc-500 pointer-events-none" />
         </div>
-
-        {/* Channel select — only shown after server selected */}
+ 
+        {/* Channel select — shown only when server selected */}
         {selectedServerId && (
           <>
             <span className="text-zinc-600">/</span>
             <div className="relative">
-              {channelsLoading
-                ? <div className="flex items-center gap-1.5 px-2 py-1 text-xs text-zinc-500">
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                    Loading…
-                  </div>
-                : (
-                  <select
-                    value={selectedChannelId ?? ""}
-                    onChange={e => onSelectChannel(e.target.value || null)}
-                    className="appearance-none pl-2 pr-6 py-1 rounded text-xs bg-zinc-700/60
-                      border border-zinc-600/50 text-zinc-300 focus:outline-none
-                      focus:border-indigo-500/60 transition cursor-pointer"
-                  >
-                    <option value="">All channels</option>
-                    {channels.map(ch => (
-                      <option key={ch.id} value={ch.id}>#{ch.name}</option>
-                    ))}
-                  </select>
-                )
-              }
-              {!channelsLoading && (
-                <ChevronDown className="absolute right-1.5 top-1/2 -translate-y-1/2
-                  w-3 h-3 text-zinc-500 pointer-events-none" />
-              )}
+              <select
+                value={selectedChannelId ?? ""}
+                onChange={e => onSelectChannel(e.target.value || null)}
+                className="appearance-none pl-2 pr-6 py-1 rounded text-xs bg-zinc-700/60
+                  border border-zinc-600/50 text-zinc-300 focus:outline-none
+                  focus:border-indigo-500/60 transition cursor-pointer"
+              >
+                <option value="">All channels</option>
+                {textChannels.map((ch: any) => (
+                  <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-1.5 top-1/2 -translate-y-1/2
+                w-3 h-3 text-zinc-500 pointer-events-none" />
             </div>
           </>
         )}

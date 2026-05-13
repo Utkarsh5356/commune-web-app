@@ -1,5 +1,6 @@
 import { useAuth } from "@clerk/clerk-react"
 import { useQuery } from "@tanstack/react-query";
+import { ChannelType } from "./use-server-data";
 import axios from "axios"
 
 
@@ -7,7 +8,12 @@ export interface Servers {
   id: string;
   name: string;
   imageUrl: string;
-  inviteCode:string  
+  inviteCode:string
+  channels: {
+    id: string;
+    name: string;
+    type: ChannelType;
+  }[]  
 }
 
 export const useAllServers=()=>{
