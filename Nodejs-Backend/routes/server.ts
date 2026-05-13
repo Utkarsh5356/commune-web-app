@@ -76,6 +76,10 @@ server.get("/all",async(req:Request,res:Response)=>{
         name:true,
         imageUrl:true,
         inviteCode:true,
+        channels: {
+          where: {type: "TEXT"},
+          select: {id: true, name: true, type: true}
+        }
       } 
     }) 
     return res.json(servers)   
