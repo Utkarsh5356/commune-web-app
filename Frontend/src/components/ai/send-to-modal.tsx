@@ -119,7 +119,7 @@ export const SendToModal = ({ text, profile, onClose }: SendToModalProps) => {
                   hover:bg-zinc-700/50 transition text-left">
                 <span className="text-xs font-semibold text-zinc-300 flex-1 truncate">{server.name}</span>
                 <ChevronDown className={cn(
-                  "w-3.5 h-3.5 text-zinc-500 transition-transform flex-shrink-0",
+                  "w-3.5 h-3.5 text-zinc-500 transition-transform shrink-0",
                   expandedServer === server.id && "rotate-180"
                 )} />
               </button>
@@ -141,9 +141,9 @@ export const SendToModal = ({ text, profile, onClose }: SendToModalProps) => {
                                   ? "bg-indigo-500/20 text-indigo-300"
                                   : "text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-200"
                               )}>
-                              <Hash className="w-3.5 h-3.5 flex-shrink-0" />
+                              <Hash className="w-3.5 h-3.5 shrink-0" />
                               <span className="text-xs truncate flex-1">{ch.name}</span>
-                              {isSelected && <Check className="w-3 h-3 text-indigo-400 flex-shrink-0" />}
+                              {isSelected && <Check className="w-3 h-3 text-indigo-400 shrink-0" />}
                             </button>
                           )
                         })
@@ -161,9 +161,9 @@ export const SendToModal = ({ text, profile, onClose }: SendToModalProps) => {
                                   ? "bg-indigo-500/20 text-indigo-300"
                                   : "text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-200"
                               )}>
-                              <MessageSquare className="w-3.5 h-3.5 flex-shrink-0" />
+                              <MessageSquare className="w-3.5 h-3.5 shrink-0" />
                               <span className="text-xs truncate flex-1">{m.profile?.name}</span>
-                              {isSelected && <Check className="w-3 h-3 text-indigo-400 flex-shrink-0" />}
+                              {isSelected && <Check className="w-3 h-3 text-indigo-400 shrink-0" />}
                             </button>
                           )
                         })

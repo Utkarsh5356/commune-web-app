@@ -15,7 +15,6 @@ export const CommuneAiHeader = ({
   servers,
   selectedServerId,
   selectedChannelId,
-  ragEnabled,
   indexing,
   onSelectServer,
   onSelectChannel,
@@ -24,11 +23,11 @@ export const CommuneAiHeader = ({
   const textChannels = selectedServer?.channels?.filter((ch: any) => ch.type === "TEXT") ?? []
 
   return (
-    <div className="flex-shrink-0 border-b-2 border-neutral-800 bg-[#313338]">
+    <div className="shrink-0 border-b-2 border-neutral-800 bg-[#313338]">
       {/* Title row */}
       <div className="flex items-center h-12 px-4 gap-3">
-        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600
-          flex items-center justify-center flex-shrink-0">
+        <div className="w-6 h-6 rounded-full bg-linear-to-br from-indigo-500 to-violet-600
+          flex items-center justify-center shrink-0">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
             <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="white"/>
           </svg>
@@ -43,17 +42,6 @@ export const CommuneAiHeader = ({
               <span>Indexing…</span>
             </div>
           )}
-          {ragEnabled && !indexing && (
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full
-              bg-indigo-500/10 border border-indigo-500/20">
-              <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-              <span className="text-[11px] text-indigo-400 font-mono">RAG on</span>
-            </div>
-          )}
-          <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-emerald-400" />
-            <span className="text-xs text-zinc-400">Online</span>
-          </div>
         </div>
       </div>
  

@@ -40,7 +40,7 @@ export const ChatInput = ({
   const canSend = (input.trim() || pendingMedia) && !loading && !uploading
 
   return (
-    <div className="px-4 pb-6 flex-shrink-0">
+    <div className="px-4 pb-6 shrink-0">
       {/* Media badge */}
       {pendingMedia && (
         <div className="flex items-center gap-2 mb-2 px-3 py-1.5 rounded-md w-fit
@@ -49,7 +49,7 @@ export const ChatInput = ({
             ? <ImageIcon className="w-3.5 h-3.5 text-sky-400" />
             : <Film className="w-3.5 h-3.5 text-violet-400" />
           }
-          <span className="text-xs text-zinc-300 max-w-[220px] truncate">{pendingMedia.name}</span>
+          <span className="text-xs text-zinc-300 max-w-55 truncate">{pendingMedia.name}</span>
           <button onClick={onClearMedia} className="text-zinc-500 hover:text-zinc-300 transition ml-1">
             <X className="w-3 h-3" />
           </button>
@@ -59,8 +59,8 @@ export const ChatInput = ({
       {/* Upload progress */}
       {uploading && (
         <div className="flex items-center gap-2 mb-2">
-          <Loader2 className="w-3.5 h-3.5 text-indigo-400 animate-spin flex-shrink-0" />
-          <div className="flex-1 h-1 bg-zinc-700 rounded-full overflow-hidden max-w-[200px]">
+          <Loader2 className="w-3.5 h-3.5 text-indigo-400 animate-spin shrink-0" />
+          <div className="flex-1 h-1 bg-zinc-700 rounded-full overflow-hidden max-w-50">
             <div className="h-full bg-indigo-500 transition-all duration-300"
               style={{ width: `${uploadProgress}%` }} />
           </div>
@@ -129,7 +129,7 @@ export const ChatInput = ({
         </div>
       </div>
 
-      <p className="text-[10px] text-zinc-600 mt-1.5 text-center font-mono">
+      <p className="text-[10px] text-zinc-400 mt-1.5 text-center font-mono">
         Enter to send · Shift+Enter for new line · Images and videos up to 500MB
       </p>
     </div>

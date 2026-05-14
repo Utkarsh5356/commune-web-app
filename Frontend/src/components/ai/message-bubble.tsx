@@ -14,8 +14,8 @@ interface MessageBubbleProps {
 }
 
 const AiIcon = () => (
-  <div className="w-8 h-8 rounded-full flex-shrink-0
-    bg-gradient-to-br from-indigo-500 to-violet-600
+  <div className="w-8 h-8 rounded-full shrink-0
+    bg-linear-to-br from-indigo-500 to-violet-600
     flex items-center justify-center">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
       <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="white"/>
@@ -39,7 +39,7 @@ export const MessageBubble = ({ msg, profile, onSend }: MessageBubbleProps) => {
       isUser && "flex-row-reverse"
     )}>
       {/* Avatar */}
-      <div className="flex-shrink-0 mt-0.5">
+      <div className="shrink-0 mt-0.5">
         {isUser
           ? <UserAvatar src={profile.imageUrl} className="h-8 w-8" />
           : <AiIcon />
