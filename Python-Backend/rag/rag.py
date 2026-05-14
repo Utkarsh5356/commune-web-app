@@ -1,12 +1,13 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, text, desc
+from sqlalchemy.orm import joinedload
 from typing import Optional
 from database.database import MessageEmbedding, Message, Member, Profile
 from gemini_client import get_client, get_embedding_model
 import asyncio
 
-TOP_K = 8
-MIN_SIMILARITY = 0.6
+TOP_K = 15
+MIN_SIMILARITY = 0.3
 EMBEDDING_DIMS = 768 # gemini-embedding-001 model outputs 768 dims
 
 async def embed_text(text_content: str) -> list[float]:
@@ -94,8 +95,9 @@ async def index_channel_messages(
         )
         .order_by(desc(Message.createdAt))
         .limit(limit)
-        .join(Message.member)
-        .join(Member.profile)
+        .options(
+            joinedload(Message.member).joinedload(Member.profile)
+        )
     )
     messages = result.scalars().all()
     

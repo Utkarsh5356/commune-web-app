@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, desc
+from sqlalchemy.orm import joinedload
 from pydantic import BaseModel
 from typing import Optional, Literal
 import httpx
@@ -11,7 +12,7 @@ import asyncio
 from google import genai
 from google.genai import types
 from config import get_settings
-from database.database import get_db, Profile, Server, Member
+from database.database import get_db, Profile, Server, Member, Message
 from auth.auth import get_current_profile
 from gemini_client import get_client, get_main_model
 from rag.rag import (
@@ -150,16 +151,54 @@ async def commune_ai_chat(
     
     # step 1 :- RAG retrieval
     rag_context = ""
+    
+    SUMMARY_KEYWORDS = [
+        "summarize", "summary", "what happened", "what was said",
+        "what is admin", "what did", "recent messages", "discussed",
+        "what was decided", "catch me up", "tldr", "recap",
+        "what are people saying", "what is everyone", "channel messages"
+    ]
+    is_summary_request = any(
+        kw in body.message.lower() for kw in SUMMARY_KEYWORDS
+    ) if body.message else False
+    
     if body.message and body.media_type != "video":
-        relevant = await retrieve_relevant_messages(
-            db=db,
-            query=body.message,
-            channel_id=body.channel_id,
-            server_id=body.server_id
-        )
-        if relevant:
-            rag_context = format_context(relevant)
-            rag_context_used = True
+        if is_summary_request and body.channel_id:
+            # Summary requests — fetch last 30 messages directly from DB
+            msgs_result = await db.execute(
+                select(Message)
+                .where(Message.channelId == body.channel_id, Message.deleted == False)
+                .order_by(desc(Message.createdAt))
+                .limit(30)
+                .options(
+                    joinedload(Message.member).joinedload(Member.profile)
+                )
+            )
+            direct_msgs = list(reversed(msgs_result.unique().scalars().all()))
+            if direct_msgs:
+                lines = "\n".join(
+                    f"{m.member.profile.name}: {m.content}"
+                    for m in direct_msgs
+                    if m.content != "This message has been deleted."
+                )
+                rag_context = (
+                    "## Recent channel messages:\n"
+                    + lines
+                    + "\n\nUse these messages to answer the user's question accurately."
+                )
+                rag_context_used = True
+                
+        else:  
+            # Specific question - use rag similarity search  
+            relevant = await retrieve_relevant_messages(
+                db=db,
+                query=body.message,
+                channel_id=body.channel_id,
+                server_id=body.server_id
+            )
+            if relevant:
+                rag_context = format_context(relevant)
+                rag_context_used = True
     
     # step 2 :- Inject RAG context into system prompt
     system_with_context = SYSTEM_PROMPT
@@ -181,7 +220,8 @@ async def commune_ai_chat(
             raise HTTPException(502, detail=f"Could not fetch image: {e}") 
     elif body.media_type == "video" and body.media_url:
         try:
-            video_file = await _upload_video(body.media_url) 
+            video_file = await _upload_video(body.media_url)
+            video_file_name = video_file.name 
             current_parts.append(types.Part(
                 file_data=types.FileData(file_uri=video_file.uri, mime_type=video_file.mime_type)
             ))
