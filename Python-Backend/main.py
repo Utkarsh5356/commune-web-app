@@ -4,6 +4,8 @@ from contextlib import asynccontextmanager
 from config import get_settings
 from database.database import engine
 from routes.commune_ai import router as commune_ai_router
+from routes.summarize import router as summarize_channel_router
+from routes.smart_reply import router as smart_reply_router
 
 settings = get_settings()
 
@@ -29,6 +31,9 @@ app.add_middleware(
 )
 
 app.include_router(commune_ai_router, prefix="/api/v1/ai", tags=["CommuneAI"])
+app.include_router(summarize_channel_router, prefix="/api/v1/ai", tags=["SummarizeChannel"])
+app.include_router(smart_reply_router, prefix="/api/v1/ai", tags=["SmartReplies"])
+    
 
 @app.get("/health")
 async def get_health():
