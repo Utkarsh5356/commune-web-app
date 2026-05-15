@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc
 from sqlalchemy.orm import joinedload
 from pydantic import BaseModel
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
  
 from config import get_settings
 from database.database import get_db, Profile, Message, Member, Channel, Server, AiSummary, AiSummaryType
@@ -47,7 +47,7 @@ async def summarize_channel(
     if not channel:
         raise HTTPException(404, detail="Channel not found")
  
-    cache_cutoff = datetime.utcnow() - timedelta(minutes=SUMMARY_CACHE_MINUTES)
+    cache_cutoff = datetime.now(timezone.utc) - timedelta(minutes=SUMMARY_CACHE_MINUTES)
     cached_result = await db.execute(
         select(AiSummary)
         .where(
