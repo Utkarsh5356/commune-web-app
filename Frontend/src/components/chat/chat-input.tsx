@@ -1,4 +1,5 @@
 import * as z from "zod"
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useChatInput } from "@/hooks/chat/use-chat-input";
 import { useDirectMessageInput } from "@/hooks/direct-message/use-direct-message-input";
@@ -13,6 +14,7 @@ import {
 } from "../ui/form"
 import { Input } from "../ui/input";
 import { Plus } from "lucide-react";
+import { AiSmartReplies } from "../ai/ai-smart-reply";
 
 interface ChatInputProps {
   query: Record<string,string>
@@ -32,6 +34,7 @@ export const ChatInput=({
  const chatInput=useChatInput()
  const directMessageInput=useDirectMessageInput() 
  const { onOpen }=useModal()
+ const [inputFocused, setInputFocused] = useState(false)
 
  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,7 +42,6 @@ export const ChatInput=({
        content: "" 
     }
  })
- 
  const isLoading = type === "channel" ? chatInput.isPending : directMessageInput.isPending
 
  const onSubmit = async(values: z.infer<typeof formSchema>)=>{
@@ -48,8 +50,22 @@ export const ChatInput=({
    :
   await directMessageInput.mutateAsync({values,query})
   form.reset()
+  setInputFocused(false)
  }
 
+ const handleSuggestionSelect = (
+   text: string,
+   onChange: (value: string) => void
+  ) => {
+  onChange(text)
+
+   form.setValue("content", text, {
+     shouldValidate: true,
+     shouldDirty: true,
+     shouldTouch: true,
+   })
+ }
+ 
  return (
    <Form {...form}>
      <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -59,30 +75,46 @@ export const ChatInput=({
        render={({field})=>(
         <FormItem>
           <FormControl>
-            <div className="relative p-4 pb-6">
+           < div>
+             <AiSmartReplies
+                 serverId={query.serverId}
+                 channelId={type === "channel" ? query.channelId : undefined}
+                 conversationId={type === "conversation" ? query.conversationId : undefined}
+                 onSelect={(text) =>
+                  handleSuggestionSelect(text, field.onChange)
+                 }                 
+                 active={inputFocused && !field.value}
+               />
+             <div className="relative p-4 pb-6">
               <button
-               type="button"
-               onClick={() => onOpen("messageFile" , {query})}
-               className="absolute top-7 left-8 h-6 w-6
-               bg-zinc-400 hover:bg-zinc-300 transition rounded-full
-               p-1 flex items-center justify-center"
-              >
-               <Plus className="text-[#313338] cursor-pointer"/>
-              </button>
-              <Input
-               disabled={isLoading}
-               className="px-14 py-6 font-mono bg-zinc-700/75 border-none
-               border-0 focus-visible:ring-0 focus-visible:ring-offset-0
-               text-zinc-200"
-               placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
-               {...field}
-              />
-              <div className="absolute top-7 right-8">
-                <EmojiPicker 
-                 onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
-                />
-              </div>
-            </div>
+                type="button"
+                onClick={() => onOpen("messageFile" , {query})}
+                className="absolute top-7 left-8 h-6 w-6
+                bg-zinc-400 hover:bg-zinc-300 transition rounded-full
+                p-1 flex items-center justify-center"
+               >
+                <Plus className="text-[#313338] cursor-pointer"/>
+               </button>
+               <Input
+                disabled={isLoading}
+                className="px-14 py-6 font-mono bg-zinc-700/75 border-none
+                border-0 focus-visible:ring-0 focus-visible:ring-offset-0
+                text-zinc-200"
+                placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
+                {...field}
+                onFocus={() => setInputFocused(true)}
+                onBlur={() => {
+                  field.onBlur()
+                  setTimeout(() => setInputFocused(false), 200)}
+                }
+               />
+               <div className="absolute top-7 right-8">
+                 <EmojiPicker 
+                  onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
+                 />
+               </div>
+             </div>
+            </div> 
           </FormControl>  
         </FormItem>
        )}

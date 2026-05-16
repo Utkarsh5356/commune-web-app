@@ -71,7 +71,7 @@ export const SendToModal = ({ text, profile, onClose }: SendToModalProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-      <div className="w-[400px] max-h-[560px] bg-[#1E1F22] rounded-lg border border-zinc-700/60
+      <div className="w-100 max-h-140 bg-[#1E1F22] rounded-lg border border-zinc-700/60
         shadow-xl flex flex-col overflow-hidden">
 
         {/* Header */}

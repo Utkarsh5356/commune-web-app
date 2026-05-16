@@ -32,7 +32,7 @@ interface CurrentConversationProps {
 }
 
 export const MemberContent=()=>{
-  const {serverId,memberId}=useOutletContext<{serverId:string,memberId:string}>()
+  const {serverId,channelId,memberId}=useOutletContext<{serverId:string, channelId:string,memberId:string}>()
   const { data: currentMember, isLoading: currentMemberLoading }=useCurrentMemberData({serverId})
   const {getOrCreate} = getOrCreateConversation(currentMember?.id,memberId)
   const [searchParams] = useSearchParams()
@@ -67,6 +67,8 @@ export const MemberContent=()=>{
          imageUrl={currentConversation.memberTwo.profile.imageUrl}
          name={currentConversation.memberTwo.profile.name}
          type="conversation"
+         serverId={serverId}
+         channelId={channelId}
         />
         {searchParams.get("video") && (
           <MediaRoom

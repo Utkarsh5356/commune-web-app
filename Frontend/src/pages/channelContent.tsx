@@ -21,6 +21,8 @@ export const ChannelContent=()=>{
         <ChatHeader 
          name={channelData?.name}
          type="channel"
+         serverId={serverId}
+         channelId={channelId}
         />
         {channelData?.type === ChannelType.TEXT && (
           <>

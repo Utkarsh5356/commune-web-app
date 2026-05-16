@@ -2,17 +2,22 @@ import { Hash } from "lucide-react"
 import { UserAvatar } from "../user-avatar";
 import { SocketIndicator } from "../socket-indicator";
 import { ChatVideoButton } from "./chat-video-button";
+import { AiSummaryPanel } from "../ai/ai-summary-pannel";
 
 interface ChatHeaderProps {
   name?: string;
   type: "channel" | "conversation";
   imageUrl?: string;
+  serverId: string
+  channelId: string
 }
 
 export const ChatHeader=({
   name,
   type,
-  imageUrl  
+  imageUrl,
+  channelId,
+  serverId  
 }: ChatHeaderProps)=>{
   return (
     <div className="text-md font-semibold px-3 flex items-center h-12
@@ -29,7 +34,11 @@ export const ChatHeader=({
        <p className="font-mono font-semibold text-md text-white">
         {name}
        </p>
-       <div className="ml-auto flex items-center"> 
+       <div className="ml-auto flex items-center gap-2">
+         {type === "channel" && serverId && channelId && (
+           <AiSummaryPanel serverId={serverId} channelId={channelId} channelName={name} />
+         )}
+ 
          {type === "conversation" && (
           <ChatVideoButton/>
          )}

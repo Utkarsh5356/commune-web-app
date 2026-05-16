@@ -71,6 +71,31 @@ export const useAi = () => {
           channel_id: string
         }
     }
+    
+    // Channel summary (chat header "Summary" button)
+    const summarizeChannel = async (serverId: string, channelId: string) => {
+      const headers = await authHeaders()
+      const res = await axios.post(
+        `${AI_BASE}/summarize-channel?serverId=${serverId}&channelId=${channelId}`,
+        {},
+        { headers }
+      )
+      return res.data as { summary: string; message_count: number; cached: boolean; generated_at: string }
+    }
+   
+    // Smart reply pills (above chat input) 
+    const suggestReplies = async (params: {
+      serverId?: string
+      channelId?: string
+      conversationId?: string
+    }) => {
+      const headers = await authHeaders()
+      const query = new URLSearchParams(
+        Object.fromEntries(Object.entries(params).filter(([, v]) => v != null)) as Record<string, string>
+      ).toString()
+      const res = await axios.post(`${AI_BASE}/suggest-replies?${query}`, {}, { headers })
+      return res.data as { suggestions: string[] }
+    }
 
-    return { communeAiChat, indexMessage, indexChannel }
+    return { communeAiChat, indexMessage, indexChannel, summarizeChannel, suggestReplies }
 }
