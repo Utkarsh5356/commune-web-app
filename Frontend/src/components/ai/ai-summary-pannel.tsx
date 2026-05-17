@@ -85,7 +85,7 @@ export const AiSummaryPanel = ({ serverId, channelId, channelName }: AiSummaryPa
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent
           side="right"
-          className="w-[380px] bg-[#1E1F22] border-zinc-700/50 flex flex-col p-0"
+          className="w-95 bg-[#1E1F22] border-zinc-700/50 flex flex-col p-0"
         >
           {/* Header */}
           <SheetHeader className="px-5 pt-5 pb-3 border-b border-zinc-700/50">
@@ -155,8 +155,8 @@ export const AiSummaryPanel = ({ serverId, channelId, channelName }: AiSummaryPa
           {state.status === "success" && (
             <div className="px-5 py-3 border-t border-zinc-700/50 flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <Clock className="w-3 h-3 text-zinc-600" />
-                <span className="text-[10px] text-zinc-600">
+                <Clock className="w-3 h-3 text-zinc-500" />
+                <span className="text-[10px] text-zinc-400">
                   {state.cached ? "Cached" : "Just generated"} · {state.messageCount} messages
                 </span>
               </div>
