@@ -64,8 +64,8 @@ class Profile(Base):
     name: Mapped[str] = mapped_column(String)
     imageUrl: Mapped[str] = mapped_column(Text)
     email: Mapped[str] = mapped_column(Text)
-    createdAt: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc))   
-    updatedAt: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc)) 
+    createdAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))   
+    updatedAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)) 
     
     members: Mapped[list["Member"]] = relationship("Member", back_populates="profile")    
 
@@ -77,8 +77,8 @@ class Server(Base):
     imageUrl: Mapped[str] = mapped_column(Text)
     inviteCode: Mapped[str] = mapped_column(String, unique=True)
     profileId: Mapped[str] = mapped_column(String, ForeignKey("Profile.id", ondelete="CASCADE"))
-    createdAt: Mapped[datetime] = mapped_column(DateTime)
-    updatedAt: Mapped[datetime] = mapped_column(DateTime)
+    createdAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updatedAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
  
     members: Mapped[list["Member"]] = relationship("Member", back_populates="server")
     channels: Mapped[list["Channel"]] = relationship("Channel", back_populates="server")
@@ -91,8 +91,8 @@ class Member(Base):
     role: Mapped[MemberRole] = mapped_column(SAEnum(MemberRole, name="MemberRole"), default=MemberRole.GUEST)
     profileId: Mapped[str] = mapped_column(String, ForeignKey("Profile.id", ondelete="CASCADE"))
     serverId: Mapped[str] = mapped_column(String, ForeignKey("Server.id", ondelete="CASCADE"))
-    createdAt: Mapped[datetime] = mapped_column(DateTime)
-    updatedAt: Mapped[datetime] = mapped_column(DateTime)
+    createdAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updatedAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
  
     profile: Mapped["Profile"] = relationship("Profile", back_populates="members")
     server: Mapped["Server"] = relationship("Server", back_populates="members")
@@ -107,8 +107,8 @@ class Channel(Base):
     type: Mapped[ChannelType] = mapped_column(SAEnum(ChannelType, name="ChannelType"), default=ChannelType.TEXT)
     profileId: Mapped[str] = mapped_column(String, ForeignKey("Profile.id", ondelete="CASCADE"))
     serverId: Mapped[str] = mapped_column(String, ForeignKey("Server.id", ondelete="CASCADE"))
-    createdAt: Mapped[datetime] = mapped_column(DateTime)
-    updatedAt: Mapped[datetime] = mapped_column(DateTime)
+    createdAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updatedAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
  
     server: Mapped["Server"] = relationship("Server", back_populates="channels")
     messages: Mapped[list["Message"]] = relationship("Message", back_populates="channel")
@@ -123,8 +123,8 @@ class Message(Base):
     memberId: Mapped[str] = mapped_column(String, ForeignKey("Member.id", ondelete="CASCADE"))
     channelId: Mapped[str] = mapped_column(String, ForeignKey("Channel.id", ondelete="CASCADE"))
     deleted: Mapped[bool] = mapped_column(Boolean, default=False)
-    createdAt: Mapped[datetime] = mapped_column(DateTime)
-    updatedAt: Mapped[datetime] = mapped_column(DateTime)
+    createdAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updatedAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
  
     member: Mapped["Member"] = relationship("Member", back_populates="messages")
     channel: Mapped["Channel"] = relationship("Channel", back_populates="messages")
@@ -139,8 +139,8 @@ class DirectMessage(Base):
     memberId: Mapped[str] = mapped_column(String, ForeignKey("Member.id", ondelete="CASCADE"))
     conversationId: Mapped[str] = mapped_column(String, ForeignKey("Conversation.id", ondelete="CASCADE"))
     deleted: Mapped[bool] = mapped_column(Boolean, default=False)
-    createdAt: Mapped[datetime] = mapped_column(DateTime)
-    updatedAt: Mapped[datetime] = mapped_column(DateTime)
+    createdAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updatedAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
  
     member: Mapped["Member"] = relationship("Member")
  
@@ -153,10 +153,7 @@ class Conversation(Base):
     memberTwoId: Mapped[str] = mapped_column(String, ForeignKey("Member.id", ondelete="CASCADE"))
  
     directMessages: Mapped[list["DirectMessage"]] = relationship("DirectMessage", back_populates=None)
- 
- 
-# ---- AiSummary table ----
- 
+  
 class AiSummary(Base):
     __tablename__ = "AiSummary"
  
@@ -173,12 +170,8 @@ class AiSummary(Base):
     content: Mapped[str] = mapped_column(Text)
     requestedBy: Mapped[str] = mapped_column(String, ForeignKey("Profile.id", ondelete="CASCADE"))
     profile: Mapped["Profile"] = relationship("Profile")
-    createdAt: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc))   
+    createdAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))   
     
-
-# ---- RAG: Message embeddings table ----    
-
-
 class MessageEmbedding(Base):
     __tablename__ = "MessageEmbedding"
  
@@ -187,7 +180,7 @@ class MessageEmbedding(Base):
     channelId: Mapped[str] = mapped_column(String, ForeignKey("Channel.id", ondelete="CASCADE"))
     content: Mapped[str] = mapped_column(Text)
     embedding = mapped_column(Vector(768))   # Gemini text-embedding-004 = 768 dims
-    createdAt: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    createdAt: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
  
     message: Mapped["Message"] = relationship("Message")
     channel: Mapped["Channel"] = relationship("Channel")  
