@@ -70,36 +70,37 @@ export const ChatMessages=({
   })
   
   useChatSocket({queryKey, addKey, updateKey})
-   
+
+  // Scroll to bottom instantly on channel switch
   useEffect(() => {
-   const topDiv = chatRef?.current
-   if(!topDiv) return  
-    
-   const distnaceFromBottom = topDiv.scrollHeight - topDiv.scrollTop - topDiv.clientHeight
-   const isNearBottom = distnaceFromBottom <= 100
-   
-   if(isNearBottom) bottomRef.current?.scrollIntoView({behavior: "smooth"})
+    bottomRef.current?.scrollIntoView({ behavior: "instant" })
+  }, [chatId])
+
+  // Scroll to bottom smoothly on new message
+  useEffect(() => {
+    const topDiv = chatRef?.current
+    if(!topDiv) return  
+    const distanceFromBottom = topDiv.scrollHeight - topDiv.scrollTop - topDiv.clientHeight
+    const isNearBottom = distanceFromBottom <= 100
+    if(isNearBottom) bottomRef.current?.scrollIntoView({ behavior: "smooth" })
   },[data?.pages?.[0]?.items?.[0]])
   
+  // Load older messages on scroll to top
   useEffect(()=>{
-   const observer = new IntersectionObserver((entries) => {
-    if(entries[0].isIntersecting && hasNextPage && !isFetchingNextPage){
-      fetchNextPage()
-    }
-   })
-   
-   if(topRef.current) observer.observe(topRef.current)
-    
-   return () => observer.disconnect()   
+    const observer = new IntersectionObserver((entries) => {
+      if(entries[0].isIntersecting && hasNextPage && !isFetchingNextPage){
+        fetchNextPage()
+      }
+    })
+    if(topRef.current) observer.observe(topRef.current)
+    return () => observer.disconnect()   
   },[hasNextPage, isFetchingNextPage, fetchNextPage])
 
   if(status === "pending"){
     return (
       <div className="flex flex-col flex-1 justify-center items-center h-full w-full">
         <Loader2 className="h-7 w-7 text-zinc-500 animate-spin my-4"/>
-        <p className="text-xs text-zinc-400 font-mono">
-         Loading messages...
-        </p>
+        <p className="text-xs text-zinc-400 font-mono">Loading messages...</p>
       </div>
     )
   }
@@ -108,29 +109,21 @@ export const ChatMessages=({
     return (
       <div className="flex flex-col flex-1 justify-center items-center h-full w-full">
         <ServerCrash className="h-7 w-7 text-zinc-500 my-4"/>
-        <p className="text-xs text-zinc-400 font-mono">
-         Something went wrong!
-        </p>
+        <p className="text-xs text-zinc-400 font-mono">Something went wrong!</p>
       </div>
     )
   }
 
-
   return (
     <div ref={chatRef} className="flex-1 flex flex-col h-full py-4 chat-scroll overflow-y-auto">
       <div ref={topRef}/>
-       
       {isFetchingNextPage && (
        <div className="flex justify-center">
          <Loader2 className="h-6 w-6 text-zinc-500 animate-spin my-4"/>
        </div>
       )}
-
       {!hasNextPage && <div className="flex-1"/>}
-      {!hasNextPage && (<ChatWelcome
-       type={type}
-       name={name}
-      />)}
+      {!hasNextPage && (<ChatWelcome type={type} name={name}/>)}
       <div className="flex flex-col-reverse mt-auto">
        {data?.pages?.map((group,i) => (
         <Fragment key={i}>
