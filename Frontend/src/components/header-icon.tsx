@@ -24,7 +24,7 @@ export const HeaderIcon=({headerImage,id,showHeaderUI}:{headerImage:string,id:st
       )} />
        <div className={cn(
          "relative group flex mx-3 h-12 w-12 rounded-3xl group-hover:rounded-2xl transition-all overflow-hidden",
-         showHeaderUI && "bg-white/10 text-white rounded-2xl"
+         showHeaderUI ? "rounded-2xl" : "bg-zinc-700/80 group-hover:rounded-2xl"
        )}>
         <Image
          src={headerImage}

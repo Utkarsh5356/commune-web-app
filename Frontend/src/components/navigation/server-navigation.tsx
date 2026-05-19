@@ -14,7 +14,11 @@ export const ServerNavigation=({serverData}:{serverData:Servers[] | undefined})=
   const {serverId}=useParams()
   
   useEffect(()=>{
-    if(serverId) setShowHeaderUI(!showHeaderUI)
+    if (serverId) {
+      setShowHeaderUI(false)
+    } else {
+      setShowHeaderUI(true)
+    }  
   },[serverId])
 
   return(
