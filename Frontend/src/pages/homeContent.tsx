@@ -22,7 +22,6 @@ export const HomeContent = () => {
     <div className="flex flex-col items-center justify-center h-screen bg-[#313338] px-6">
       <div className="w-full max-w-md space-y-6">
 
-        {/* Header */}
         <div className="text-center">
           <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-indigo-500 to-violet-600
             flex items-center justify-center mx-auto mb-4">
@@ -37,7 +36,6 @@ export const HomeContent = () => {
           </p>
         </div>
 
-        {/* Join via invite code */}
         <div className="bg-[#1E1F22] rounded-2xl p-6 border border-zinc-800/50">
           <div className="flex items-center gap-2 mb-4">
             <LogIn className="w-4 h-4 text-indigo-400" />
@@ -77,14 +75,12 @@ export const HomeContent = () => {
           </form>
         </div>
 
-        {/* Divider */}
         <div className="flex items-center gap-3">
           <div className="flex-1 h-px bg-zinc-400/50" />
           <span className="text-xs text-zinc-400">or</span>
           <div className="flex-1 h-px bg-zinc-400/50" />
         </div>
 
-        {/* Create server hint */}
         <div className="bg-[#1E1F22] rounded-2xl p-6 border border-zinc-800/50">
           <div className="flex items-center gap-2 mb-2">
             <Plus className="w-4 h-4 text-emerald-400" />
@@ -96,7 +92,6 @@ export const HomeContent = () => {
           </p>
         </div>
 
-        {/* DM hint */}
         <div className="flex items-center gap-3 px-2">
           <Hash className="w-4 h-4 text-zinc-400 shrink-0" />
           <p className="text-xs text-zinc-400">
