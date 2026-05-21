@@ -23,13 +23,6 @@ export const HomeContent = () => {
       <div className="w-full max-w-md space-y-6">
 
         <div className="text-center">
-          <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-indigo-500 to-violet-600
-            flex items-center justify-center mx-auto mb-4">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="white"/>
-              <path d="M19 16L19.8 18.2L22 19L19.8 19.8L19 22L18.2 19.8L16 19L18.2 18.2L19 16Z" fill="white" opacity="0.7"/>
-            </svg>
-          </div>
           <h1 className="text-2xl font-bold text-white font-mono">Welcome to Commune</h1>
           <p className="text-zinc-400 text-sm mt-2">
             Join a server with an invite code or create your own
