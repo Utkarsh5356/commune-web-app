@@ -24,7 +24,6 @@ export const CommuneAiHeader = ({
 
   return (
     <div className="shrink-0 border-b-2 border-neutral-800 bg-[#313338]">
-      {/* Title row */}
       <div className="flex items-center h-12 px-4 gap-3">
         <div className="w-6 h-6 rounded-full bg-linear-to-br from-indigo-500 to-violet-600
           flex items-center justify-center shrink-0">
@@ -45,11 +44,9 @@ export const CommuneAiHeader = ({
         </div>
       </div>
  
-      {/* RAG scope row */}
       <div className="flex items-center gap-2 px-4 pb-2.5">
         <span className="text-[11px] text-zinc-500 font-mono">context:</span>
  
-        {/* Server select */}
         <div className="relative">
           <select
             value={selectedServerId ?? ""}
@@ -70,7 +67,6 @@ export const CommuneAiHeader = ({
             w-3 h-3 text-zinc-500 pointer-events-none" />
         </div>
  
-        {/* Channel select — shown only when server selected */}
         {selectedServerId && (
           <>
             <span className="text-zinc-600">/</span>

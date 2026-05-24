@@ -38,7 +38,6 @@ export const MessageBubble = ({ msg, profile, onSend }: MessageBubbleProps) => {
       "group flex items-start gap-3 py-1 px-4 hover:bg-black/5 transition-colors rounded",
       isUser && "flex-row-reverse"
     )}>
-      {/* Avatar */}
       <div className="shrink-0 mt-0.5">
         {isUser
           ? <UserAvatar src={profile.imageUrl} className="h-8 w-8" />
@@ -47,7 +46,6 @@ export const MessageBubble = ({ msg, profile, onSend }: MessageBubbleProps) => {
       </div>
 
       <div className={cn("flex flex-col max-w-[78%]", isUser && "items-end")}>
-        {/* Name + time */}
         <div className={cn("flex items-baseline gap-2 mb-1", isUser && "flex-row-reverse")}>
           <span className={cn(
             "text-sm font-semibold",
@@ -58,7 +56,6 @@ export const MessageBubble = ({ msg, profile, onSend }: MessageBubbleProps) => {
           <span className="text-[10px] text-zinc-500 font-mono">
             {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </span>
-          {/* RAG badge */}
           {!isUser && msg.rag_context_used && (
             <span className="text-[9px] text-indigo-400/70 font-mono bg-indigo-500/10
               px-1.5 py-0.5 rounded border border-indigo-500/20">
@@ -67,7 +64,6 @@ export const MessageBubble = ({ msg, profile, onSend }: MessageBubbleProps) => {
           )}
         </div>
 
-        {/* Media preview */}
         {msg.media_url && msg.media_type === "image" && (
           <img
             src={msg.media_url}
@@ -83,7 +79,6 @@ export const MessageBubble = ({ msg, profile, onSend }: MessageBubbleProps) => {
           </div>
         )}
 
-        {/* Message content */}
         <div className={cn(
           "text-sm leading-relaxed",
           isUser
@@ -96,7 +91,6 @@ export const MessageBubble = ({ msg, profile, onSend }: MessageBubbleProps) => {
           }
         </div>
 
-        {/* AI message actions */}
         {!isUser && (
           <div className="flex items-center gap-3 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <ActionTooltip label={copied ? "Copied!" : "Copy"} side="bottom">

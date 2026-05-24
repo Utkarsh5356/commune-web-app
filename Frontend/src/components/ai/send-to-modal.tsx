@@ -74,7 +74,6 @@ export const SendToModal = ({ text, profile, onClose }: SendToModalProps) => {
       <div className="w-100 max-h-140 bg-[#1E1F22] rounded-lg border border-zinc-700/60
         shadow-xl flex flex-col overflow-hidden">
 
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-3
           border-b border-zinc-700/50 bg-[#2B2D31]">
           <div className="flex items-center gap-2">
@@ -87,14 +86,12 @@ export const SendToModal = ({ text, profile, onClose }: SendToModalProps) => {
           </button>
         </div>
 
-        {/* Preview */}
         <div className="mx-4 mt-3 p-3 rounded bg-zinc-800/80 border border-zinc-700/40 max-h-20 overflow-y-auto">
           <p className="text-xs text-zinc-400 leading-relaxed font-mono">
             {text.slice(0, 180)}{text.length > 180 ? "…" : ""}
           </p>
         </div>
 
-        {/* Tabs */}
         <div className="flex mx-4 mt-3 bg-zinc-800/60 rounded p-0.5 border border-zinc-700/40">
           {(["channels", "dms"] as const).map(t => (
             <button key={t} onClick={() => setTab(t)}
@@ -109,7 +106,6 @@ export const SendToModal = ({ text, profile, onClose }: SendToModalProps) => {
           ))}
         </div>
 
-        {/* List */}
         <div className="flex-1 overflow-y-auto px-2 py-2 space-y-0.5">
           {servers?.map(server => (
             <div key={server.id}>
@@ -174,7 +170,6 @@ export const SendToModal = ({ text, profile, onClose }: SendToModalProps) => {
           ))}
         </div>
 
-        {/* Send button */}
         <div className="px-4 py-3 border-t border-zinc-700/50">
           <button
             onClick={handleSend}

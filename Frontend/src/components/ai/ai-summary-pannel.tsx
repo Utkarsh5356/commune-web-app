@@ -43,7 +43,6 @@ export const AiSummaryPanel = ({ serverId, channelId, channelName }: AiSummaryPa
     if (state.status === "idle") fetchSummary()
   }
 
-  // Render markdown-ish summary (headings, bullets) without a full markdown lib
   const renderSummary = (text: string) => {
     return text.split("\n").map((line, i) => {
       if (line.startsWith("## ")) {
@@ -71,7 +70,6 @@ export const AiSummaryPanel = ({ serverId, channelId, channelName }: AiSummaryPa
 
   return (
     <>
-      {/* Trigger button — drop this into chat-header.tsx */}
       <button
         onClick={handleOpen}
         className="flex items-center gap-1.5 px-2.5 py-1 rounded-md
@@ -87,7 +85,6 @@ export const AiSummaryPanel = ({ serverId, channelId, channelName }: AiSummaryPa
           side="right"
           className="w-95 bg-[#1E1F22] border-zinc-700/50 flex flex-col p-0"
         >
-          {/* Header */}
           <SheetHeader className="px-5 pt-5 pb-3 border-b border-zinc-700/50">
             <div className="flex items-center justify-between">
               <SheetTitle className="flex items-center gap-2 text-white font-mono text-sm">
@@ -111,7 +108,6 @@ export const AiSummaryPanel = ({ serverId, channelId, channelName }: AiSummaryPa
             )}
           </SheetHeader>
 
-          {/* Content */}
           <div className="flex-1 overflow-y-auto px-5 py-4">
             {state.status === "loading" && (
               <div className="space-y-3">
@@ -151,7 +147,6 @@ export const AiSummaryPanel = ({ serverId, channelId, channelName }: AiSummaryPa
             )}
           </div>
 
-          {/* Footer */}
           {state.status === "success" && (
             <div className="px-5 py-3 border-t border-zinc-700/50 flex items-center justify-between">
               <div className="flex items-center gap-1.5">

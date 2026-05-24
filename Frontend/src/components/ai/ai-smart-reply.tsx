@@ -53,7 +53,6 @@ export const AiSmartReplies = ({
     }
   }, [active])
 
-  // Always render — just hide visually when not active
   const visible = active && (loading || suggestions.length > 0)
 
   if (!visible) return null

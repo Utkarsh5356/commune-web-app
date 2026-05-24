@@ -41,7 +41,6 @@ export const ChatInput = ({
 
   return (
     <div className="px-4 pb-6 shrink-0">
-      {/* Media badge */}
       {pendingMedia && (
         <div className="flex items-center gap-2 mb-2 px-3 py-1.5 rounded-md w-fit
           bg-zinc-700/50 border border-zinc-600/50">
@@ -56,7 +55,6 @@ export const ChatInput = ({
         </div>
       )}
 
-      {/* Upload progress */}
       {uploading && (
         <div className="flex items-center gap-2 mb-2">
           <Loader2 className="w-3.5 h-3.5 text-indigo-400 animate-spin shrink-0" />
@@ -68,17 +66,15 @@ export const ChatInput = ({
         </div>
       )}
 
-      {/* Main input */}
       <div className="relative flex items-end bg-zinc-700/75 rounded-lg border border-zinc-600/30
         focus-within:border-zinc-500/50 transition-colors">
 
-        {/* Attach */}
         <ActionTooltip label="Upload image or video" side="top">
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="absolute left-3 bottom-3 h-6 w-6 rounded-full
+            className="absolute left-3 bottom-4 h-6 w-6 rounded-full
               bg-zinc-400 hover:bg-zinc-300 transition flex items-center justify-center
               disabled:opacity-40 disabled:cursor-not-allowed"
           >
@@ -94,7 +90,6 @@ export const ChatInput = ({
           onChange={e => { const f = e.target.files?.[0]; if (f) onFileSelect(f); e.target.value = "" }}
         />
 
-        {/* Textarea */}
         <textarea
           value={input}
           onChange={e => onInputChange(e.target.value)}
@@ -108,8 +103,7 @@ export const ChatInput = ({
           style={{ scrollbarWidth: "none" }}
         />
 
-        {/* Right side: emoji + send */}
-        <div className="absolute right-3 bottom-3 flex items-center gap-2">
+        <div className="absolute right-3 bottom-4 flex items-center gap-2">
           <EmojiPicker onChange={(emoji: string) => onInputChange(input + emoji)} />
           <ActionTooltip label="Send message" side="top">
             <button
