@@ -26,7 +26,7 @@ export const ServerNavigation=({serverData}:{serverData:Servers[] | undefined})=
      className="space-y-4 flex flex-col items-center h-full 
      text-white w-full bg-[#1E1F22] py-3" 
     >
-      <div onClick={()=>{setShowHeaderUI(!showHeaderUI)}}><HeaderIcon headerImage={""} 
+      <div onClick={()=>{setShowHeaderUI(!showHeaderUI)}}><HeaderIcon headerImage={"https://res.cloudinary.com/dk4rdpazd/image/upload/v1779739185/Commune_skpfki.png"} 
         id={"@me"} showHeaderUI={showHeaderUI}/></div>
       <Separator
        className="h-0.5! bg-zinc-700  
