@@ -28,7 +28,7 @@ export const SocketProvider = (
 
    useEffect(()=>{
      const socketInstance = new (ClientIO as any)(
-        import.meta.env.SOCKET_URL || "http://localhost:3000"
+        import.meta.env.VITE_BACKEND_URL || "http://localhost:3000"
      );
 
      socketInstance.on("connect", ()=>{
