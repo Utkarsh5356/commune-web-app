@@ -1,7 +1,7 @@
 import { useAuth } from "@clerk/clerk-react"
 import axios from "axios"
 
-const AI_BASE = "https://python-backend-mqnh.onrender.com/api/v1/ai"
+const AI_BASE = "https://python-backend-84c1.onrender.com/api/v1/ai"
 
 export const useAi = () => {
   const { getToken } = useAuth()

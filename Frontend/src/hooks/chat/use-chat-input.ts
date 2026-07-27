@@ -27,7 +27,7 @@ export const useChatInput=()=>{
          }
         })
 
-        await axios.post("https://python-backend-mqnh.onrender.com/api/v1/ai/commune-ai/index", {
+        await axios.post("https://python-backend-84c1.onrender.com/api/v1/ai/commune-ai/index", {
           message_id: chatInput.data.id,
           channel_id: query.channelId,
           content: values.content
