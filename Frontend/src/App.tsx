@@ -1,5 +1,4 @@
 import { Routes,Route,Navigate } from "react-router-dom"
-import {Home} from "./pages/home"
 import {Signup} from "./pages/signup"
 import {Signin} from "./pages/singin"
 import { ChannelLayout } from "./pages/channelLayout"
@@ -15,7 +14,7 @@ function App() {
   return (
    <div className="min-h-screen">
      <Routes>
-      <Route path={"/"} element={<Home/>}/>
+      <Route path={"/"} element={<Signin/>}/>
       <Route path={"/signup"} element={<Signup/>}/>
       <Route path={"/signin"} element={<Signin/>}/>
       <Route path={"/channels"} element={<ChannelLayout/>}>

@@ -55,7 +55,7 @@ export const CommuneAiHeader = ({
               onSelectChannel(null)
             }}
             className="appearance-none pl-2 pr-6 py-1 rounded text-xs bg-zinc-700/60
-              border border-zinc-600/50 text-zinc-300 focus:outline-none
+              border border-zinc-600/50 text-zinc-100 focus:outline-none
               focus:border-indigo-500/60 transition cursor-pointer"
           >
             <option value="">No context (general AI)</option>

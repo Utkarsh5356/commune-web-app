@@ -1,5 +1,5 @@
 import { useState,useEffect } from "react"; 
-import { useParams,useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import {
   CommandDialog,
@@ -24,7 +24,6 @@ interface ServerSearchProps{
 
 export const ServerSearch=({data}:ServerSearchProps)=>{
   const [open,setOpen]=useState(false)
-  const {serverId}=useParams()
   const navigate=useNavigate()
 
   useEffect(()=>{

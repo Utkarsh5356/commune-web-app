@@ -4,16 +4,14 @@ import { useCurrentMemberData } from "@/hooks/member/use-current-member-data"
 import { ChatHeader } from "@/components/chat/chat-header"
 import { ChatInput } from "@/components/chat/chat-input"
 import { ChatMessages } from "@/components/chat/chat-messages"
-import Loader from "@/components/ui/loader"
 import { ChannelType } from "@/hooks/server/use-server-data"
 import { MediaRoom } from "@/components/media-room"
 
 export const ChannelContent=()=>{
   const {serverId,channelId}=useOutletContext<{serverId: string, channelId: string}>()
-  const { data: currentMember, isLoading: currentMemberLoading }=useCurrentMemberData({serverId})
-  const { data: channelData,isLoading: channelDataLoading }=useChannelData({channelId})
+  const { data: currentMember }=useCurrentMemberData({serverId})
+  const { data: channelData }=useChannelData({channelId})
   
-  if(channelDataLoading || currentMemberLoading) return <Loader/>
   
   return(
     <div className="h-full">

@@ -18,8 +18,7 @@ const roleIconMap = {
 }
 
 export const ServerMember = ({
-  member,
-  server
+  member
 }: ServerMemberProps) => {
   const { memberId } = useParams();
   const navigate = useNavigate();

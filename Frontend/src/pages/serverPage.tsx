@@ -44,7 +44,7 @@ export const ServerPage=()=>{
               <Loader/>
            </div> ):(
             <div className="h-full">
-             {channelId || memberId ? <Outlet context={params}/> : <Loader/>}
+             {channelId || memberId ? <Outlet context={params}/> : null}
             </div>
            )
           }
