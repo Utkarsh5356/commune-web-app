@@ -13,4 +13,5 @@ app.use("/api/v1",mainrouter)
 
 initSocket(httpServer)
 
-httpServer.listen(3000)
+const PORT = process.env.PORT || 3000
+httpServer.listen(PORT)
