@@ -9,7 +9,7 @@ export const useServerDelete=()=>{
  return  useMutation({
       mutationFn: async({serverId}:{serverId: string | undefined})=>{
         const token=await getToken()
-        const serverDelete = await axios.delete(`http://localhost:3000/api/v1/server/delete?serverId=${serverId}`,{
+        const serverDelete = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/server/delete?serverId=${serverId}`,{
           headers:{
          'Authorization':`Bearer ${token}`,
          'Content-Type':'application/json'

@@ -9,7 +9,7 @@ export const useMemberDelete=()=>{
  return  useMutation({
       mutationFn: async({memberId,serverId}:{memberId: string,serverId: string | undefined})=>{
         const token=await getToken()
-        const memberDelete = await axios.delete(`http://localhost:3000/api/v1/member/delete?serverId=${serverId}`,{
+        const memberDelete = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/member/delete?serverId=${serverId}`,{
         headers:{
          'Authorization':`Bearer ${token}`,
          'memberId':memberId,

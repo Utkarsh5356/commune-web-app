@@ -9,7 +9,7 @@ export const useServerCreate=()=>{
  return  useMutation({
       mutationFn: async({values}:{values:{name: string,imageUrl: string}})=>{
         const token=await getToken()
-        const serverData = await axios.post("http://localhost:3000/api/v1/server/create",{
+        const serverData = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/server/create`,{
           values
           },{
           headers:{

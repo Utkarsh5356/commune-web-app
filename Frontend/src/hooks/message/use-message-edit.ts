@@ -8,7 +8,7 @@ export const useMessageEdit=()=>{
  return  useMutation({
       mutationFn: async({values,id,query}:{values:{content: string}, id: string,query: Record<string,string>})=>{
         const token=await getToken()
-        const messageEdit = await axios.patch(`http://localhost:3000/api/v1/messages?messageId=${id}&channelId=${query.channelId}&serverId=${query.serverId}`,
+        const messageEdit = await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/messages?messageId=${id}&channelId=${query.channelId}&serverId=${query.serverId}`,
         {
          values
         },{    

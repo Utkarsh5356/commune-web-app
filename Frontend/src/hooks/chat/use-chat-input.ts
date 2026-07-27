@@ -17,7 +17,7 @@ export const useChatInput=()=>{
  return  useMutation({
       mutationFn: async({values,query}:{values:{content: string, fileUrl?: string}, query:Record<string,string>})=>{
         const token=await getToken()
-        const chatInput = await axios.post<ChatInput>(`http://localhost:3000/api/v1/messages?serverId=${query.serverId}&channelId=${query.channelId}`,
+        const chatInput = await axios.post<ChatInput>(`${import.meta.env.VITE_BACKEND_URL}/api/v1/messages?serverId=${query.serverId}&channelId=${query.channelId}`,
         {
          values
         },{    

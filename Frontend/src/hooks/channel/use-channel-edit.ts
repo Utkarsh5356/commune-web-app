@@ -9,7 +9,7 @@ export const useChannelEdit=()=>{
   return  useMutation({
       mutationFn: async({values,channelId,serverId}:{values:{name:string, type:string}, channelId: string | undefined, serverId: string | undefined})=>{
         const token=await getToken()
-        const channelEdit = await axios.patch(`http://localhost:3000/api/v1/channel/edit?channelId=${channelId}&serverId=${serverId}`,{
+        const channelEdit = await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/channel/edit?channelId=${channelId}&serverId=${serverId}`,{
            values
         },{
           headers:{

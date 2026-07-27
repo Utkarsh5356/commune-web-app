@@ -8,7 +8,7 @@ export const useDirectMessageDelete=()=>{
  return  useMutation({
       mutationFn: async({id,query}:{id: string | undefined, query: Record<string,string> | undefined})=>{
         const token=await getToken()
-        const directMessageDelete = await axios.delete(`http://localhost:3000/api/v1/direct-messages?directMessageId=${id}&conversationId=${query?.conversationId}`,
+        const directMessageDelete = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/direct-messages?directMessageId=${id}&conversationId=${query?.conversationId}`,
         {    
          headers:{
           'Authorization':`Bearer ${token}`,

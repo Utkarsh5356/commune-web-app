@@ -8,7 +8,7 @@ export const useDirectMessageInput=()=>{
  return  useMutation({
       mutationFn: async({values,query}:{values:{content: string, fileUrl?: string}, query:Record<string,string>})=>{
         const token=await getToken()
-        const directMessageInput = await axios.post(`http://localhost:3000/api/v1/direct-messages?conversationId=${query.conversationId}`,
+        const directMessageInput = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/direct-messages?conversationId=${query.conversationId}`,
         {
          values
         },{    

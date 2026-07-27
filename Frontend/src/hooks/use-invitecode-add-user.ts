@@ -8,7 +8,7 @@ export const useInviteCodeUser=()=>{
   return  useMutation({
       mutationFn: async({inviteCode}:{inviteCode:string | undefined})=>{
         const token=await getToken()
-        const inviteCodeUserData = await axios.put("http://localhost:3000/api/v1/server/invitecode-add-user",{
+        const inviteCodeUserData = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/v1/server/invitecode-add-user`,{
           inviteCode
         },{
         headers:{

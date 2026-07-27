@@ -9,7 +9,7 @@ export const getOrCreateConversation=(memberOneId: string | undefined,memberTwoI
   const { mutateAsync: createConversation } = useMutation({
     mutationFn: async()=>{
      const token=await getToken()
-     const createConversation=await axios.post(`http://localhost:3000/api/v1/conversation/create-conversation`,{
+     const createConversation=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/conversation/create-conversation`,{
        memberOneId,
        memberTwoId,
        },{ 

@@ -19,7 +19,7 @@ export const useCurrentProfile =()=>{
     queryKey: ["currentProfile"],
     queryFn: async()=>{
      const token=await getToken()
-     const profile=await axios.get<profileResponse>(`http://localhost:3000/api/v1/profile/data`,{
+     const profile=await axios.get<profileResponse>(`${import.meta.env.VITE_BACKEND_URL}/api/v1/profile/data`,{
         headers:{
           'Authorization':`Bearer ${token}`,
           'Content-Type':'application/json'

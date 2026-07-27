@@ -9,7 +9,7 @@ export const useServerEdit=()=>{
  return  useMutation({
       mutationFn: async({values,serverId}:{values:{name: string,imageUrl: string},serverId: string | undefined})=>{
         const token=await getToken()
-        const serverEdit = await axios.patch(`http://localhost:3000/api/v1/server/customize?serverId=${serverId}`,{
+        const serverEdit = await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/server/customize?serverId=${serverId}`,{
         values
         },{
         headers:{

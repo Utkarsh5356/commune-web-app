@@ -11,7 +11,7 @@ export const useInitiateProfile=()=>{
     mutationFn: async()=>{
      if(!user) return  
      const token=await getToken()  
-     await axios.post("http://localhost:3000/api/v1/profile/upsert",{
+     await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/profile/upsert`,{
       name:user.username === null ? user.fullName : user.username,
       imageUrl:user.imageUrl,
       email:user.emailAddresses[0].emailAddress

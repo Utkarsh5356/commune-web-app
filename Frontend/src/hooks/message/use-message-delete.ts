@@ -8,7 +8,7 @@ export const useMessageDelete=()=>{
  return  useMutation({
       mutationFn: async({id,query}:{id: string | undefined, query: Record<string,string> | undefined})=>{
         const token=await getToken()
-        const messageDelete = await axios.delete(`http://localhost:3000/api/v1/messages?messageId=${id}&channelId=${query?.channelId}&serverId=${query?.serverId}`,
+        const messageDelete = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/messages?messageId=${id}&channelId=${query?.channelId}&serverId=${query?.serverId}`,
         {    
          headers:{
           'Authorization':`Bearer ${token}`,

@@ -17,7 +17,7 @@ export const useCurrentMemberData=({serverId}:{serverId:string | undefined})=>{
     enabled: !!serverId,
     queryFn: async()=>{
       const token=await getToken()
-      const memberData=await axios.get<MemberData>(`http://localhost:3000/api/v1/member/current?serverId=${serverId}`,{
+      const memberData=await axios.get<MemberData>(`${import.meta.env.VITE_BACKEND_URL}/api/v1/member/current?serverId=${serverId}`,{
         headers:{
           'Authorization':`Bearer ${token}`,
           'Content-Type':'application/json'

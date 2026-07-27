@@ -9,7 +9,7 @@ export const useMemberRoleChange=()=>{
  return  useMutation({
       mutationFn: async({role,memberId,serverId}:{role: string,memberId: string,serverId: string | undefined})=>{
         const token=await getToken()
-        const roleChange = await axios.patch(`http://localhost:3000/api/v1/member/role-change?serverId=${serverId}`,
+        const roleChange = await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/member/role-change?serverId=${serverId}`,
           {role},{
          headers:{
            'Authorization':`Bearer ${token}`,

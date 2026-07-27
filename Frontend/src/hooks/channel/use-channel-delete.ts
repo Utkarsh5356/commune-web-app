@@ -9,7 +9,7 @@ export const useChannelDelete=()=>{
  return  useMutation({
       mutationFn: async({channelId,serverId}:{channelId: string | undefined,serverId: string | undefined})=>{
         const token=await getToken()
-        const channelDelete = await axios.delete(`http://localhost:3000/api/v1/channel/delete?channelId=${channelId}&serverId=${serverId}`,{
+        const channelDelete = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/channel/delete?channelId=${channelId}&serverId=${serverId}`,{
           headers:{
          'Authorization':`Bearer ${token}`,
          'Content-Type':'application/json'

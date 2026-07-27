@@ -12,7 +12,7 @@ export const useChatFile=()=>{
           content: values.fileUrl
         }
         const token=await getToken()
-        const chatFile = await axios.post(`http://localhost:3000/api/v1/messages?serverId=${serverId}&channelId=${channelId}`,
+        const chatFile = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/messages?serverId=${serverId}&channelId=${channelId}`,
         {
          values: newValues  
         },{    

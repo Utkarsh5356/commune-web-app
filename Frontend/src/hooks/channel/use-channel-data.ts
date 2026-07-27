@@ -19,7 +19,7 @@ export const useChannelData=({channelId}:{channelId:string | undefined})=>{
     placeholderData: (prev) => prev,
     queryFn: async()=>{
       const token=await getToken()
-      const channelData=await axios.get<ChannelData>(`http://localhost:3000/api/v1/channel/data?channelId=${channelId}`,{
+      const channelData=await axios.get<ChannelData>(`${import.meta.env.VITE_BACKEND_URL}/api/v1/channel/data?channelId=${channelId}`,{
         headers:{
           'Authorization':`Bearer ${token}`,
           'Content-Type':'application/json'

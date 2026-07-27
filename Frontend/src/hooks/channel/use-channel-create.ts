@@ -9,7 +9,7 @@ export const useChannelCreate=()=>{
   return  useMutation({
       mutationFn: async({values,serverId}:{values:{name:string, type:string},serverId: string | undefined})=>{
         const token=await getToken()
-        const channelCreate = await axios.post(`http://localhost:3000/api/v1/channel/create?serverId=${serverId}`,{
+        const channelCreate = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/channel/create?serverId=${serverId}`,{
            values
         },{
           headers:{

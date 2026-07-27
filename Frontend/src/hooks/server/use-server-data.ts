@@ -52,7 +52,7 @@ export const useServerData=({serverId}:{serverId:string | undefined})=>{
     placeholderData: (prev) => prev,
     queryFn: async()=>{
       const token=await getToken()
-      const serverData=await axios.get<ServerData>(`http://localhost:3000/api/v1/server/data?serverId=${serverId}`,{
+      const serverData=await axios.get<ServerData>(`${import.meta.env.VITE_BACKEND_URL}/api/v1/server/data?serverId=${serverId}`,{
         headers:{
           'Authorization':`Bearer ${token}`,
           'Content-Type':'application/json'

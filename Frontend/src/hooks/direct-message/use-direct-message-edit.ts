@@ -8,7 +8,7 @@ export const useDirectMessageEdit=()=>{
  return  useMutation({
       mutationFn: async({values,id,query}:{values:{content: string}, id: string,query: Record<string,string>})=>{
         const token=await getToken()
-        const directMessageEdit = await axios.patch(`http://localhost:3000/api/v1/direct-messages?directMessageId=${id}&conversationId=${query.conversationId}`,
+        const directMessageEdit = await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/direct-messages?directMessageId=${id}&conversationId=${query.conversationId}`,
         {
          values
         },{    

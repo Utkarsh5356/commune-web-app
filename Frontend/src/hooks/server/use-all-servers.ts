@@ -23,7 +23,7 @@ export const useAllServers=()=>{
     queryKey: ["allServers"],
     queryFn: async()=>{
       const token=await getToken()
-      const servers=await axios.get<Servers[]>(`http://localhost:3000/api/v1/server/all`,{
+      const servers=await axios.get<Servers[]>(`${import.meta.env.VITE_BACKEND_URL}/api/v1/server/all`,{
         headers:{
           'Authorization':`Bearer ${token}`,
           'Content-Type':'application/json'

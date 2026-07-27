@@ -9,7 +9,7 @@ export const useServerLeave=()=>{
  return  useMutation({
       mutationFn: async({serverId}:{serverId: string | undefined})=>{
         const token=await getToken()
-        const serverLeave = await axios.patch(`http://localhost:3000/api/v1/server/leave?serverId=${serverId}`,{undefined},{
+        const serverLeave = await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/server/leave?serverId=${serverId}`,{undefined},{
         headers:{
          "Authorization":`Bearer ${token}`,
          'Content-Type':'application/json'

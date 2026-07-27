@@ -23,7 +23,7 @@ export const useServerInfo=({serverId}:{serverId:string | undefined})=>{
        setUserServerLoader(true)
 
        const token=await getToken()
-       const server=await axios.get<Server>(`http://localhost:3000/api/v1/server/info?serverId=${serverId}`,{
+       const server=await axios.get<Server>(`${import.meta.env.VITE_BACKEND_URL}/api/v1/server/info?serverId=${serverId}`,{
         headers:{
           'Authorization':`Bearer ${token}`,
           'Content-Type':'application/json'
