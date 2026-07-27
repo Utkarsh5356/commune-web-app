@@ -40,4 +40,4 @@ async def get_health():
     return {"status": "ok", "service": "commune-ai-gemini"}
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=settings.port, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=settings.port, reload=True)
