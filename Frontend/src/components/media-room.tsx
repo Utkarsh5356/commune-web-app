@@ -30,7 +30,7 @@ export const MediaRoom = ({
 
    (async () => {
     try{
-     const response = await fetch(`http://localhost:3000/api/v1/livekit?room=${chatId}&username=${name}`)
+     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/livekit?room=${chatId}&username=${name}`)
      const data = await response.json()
      setToken(data.token)
     }catch(err){

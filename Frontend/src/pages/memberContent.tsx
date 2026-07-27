@@ -85,7 +85,7 @@ export const MemberContent=()=>{
              name={currentConversation.memberTwo.profile.name}
              chatId={currentConversation.id}
              type="conversation"
-             apiUrl="http://localhost:3000/api/v1/direct-messages"
+             apiUrl={`${import.meta.env.VITE_BACKEND_URL}/api/v1/direct-messages`}
              query={{conversationId: currentConversation.id}}
              paramKey="conversationId"
              paramValue={currentConversation.id}

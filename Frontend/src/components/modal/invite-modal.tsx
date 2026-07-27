@@ -40,7 +40,7 @@ export const InviteModal=()=>{
       setIsLoading(true)
 
       const token=await getToken()
-      const response=await axios.patch(`http://localhost:3000/api/v1/server/create-invitecode`,{
+      const response=await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/server/create-invitecode`,{
         serverId:server?.id,
       },{
         headers:{

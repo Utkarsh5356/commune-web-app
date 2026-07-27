@@ -35,7 +35,7 @@ export const getOrCreateConversation=(memberOneId: string | undefined,memberTwoI
 
     try{
       const token=await getToken()
-      const findConversation=await axios.get(`http://localhost:3000/api/v1/conversation/find-conversation`,{
+      const findConversation=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/conversation/find-conversation`,{
         headers:{
           'Authorization':`Bearer ${token}`,
           'memberOneId': memberOneId,

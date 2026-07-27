@@ -29,8 +29,8 @@ export const SendToModal = ({ text, profile, onClose }: SendToModalProps) => {
     const token = await getToken()
     const headers = { Authorization: `Bearer ${token}` }
     const [ch, mb] = await Promise.all([
-      axios.get(`http://localhost:3000/api/v1/channel/all?serverId=${serverId}`, { headers }),
-      axios.get(`http://localhost:3000/api/v1/member/all?serverId=${serverId}`, { headers }),
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/channel/all?serverId=${serverId}`, { headers }),
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/member/all?serverId=${serverId}`, { headers }),
     ])
     setServerChannels(prev => ({ ...prev, [serverId]: ch.data }))
     setServerMembers(prev => ({ ...prev, [serverId]: mb.data }))
@@ -51,12 +51,12 @@ export const SendToModal = ({ text, profile, onClose }: SendToModalProps) => {
 
       if (selected.type === "channel" && selected.serverId) {
         await axios.post(
-          `http://localhost:3000/api/v1/messages?serverId=${selected.serverId}&channelId=${selected.id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/messages?serverId=${selected.serverId}&channelId=${selected.id}`,
           { content }, { headers }
         )
       } else {
         await axios.post(
-          `http://localhost:3000/api/v1/direct-messages?memberId=${selected.id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/direct-messages?memberId=${selected.id}`,
           { content }, { headers }
         )
       }
