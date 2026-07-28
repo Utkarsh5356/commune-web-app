@@ -14,9 +14,6 @@ export const useAi = () => {
        } 
     }
 
-
-    // Commune RAG chatbot
-
     const communeAiChat = async (payload: {
       message: string
       history: {
@@ -41,8 +38,6 @@ export const useAi = () => {
       }
     }
 
-    // Index a single message
-
     const indexMessage = async (payload: {
       message_id: string
       channel_id: string
@@ -57,8 +52,6 @@ export const useAi = () => {
        }
     }
 
-    // Bulk index a channel
-
     const indexChannel = async (channelId: string, serverId: string) => {
         const headers = await authHeaders()
         const res = await axios.post(`${AI_BASE}/commune-ai/index-channel`, 
@@ -72,7 +65,6 @@ export const useAi = () => {
         }
     }
     
-    // Channel summary (chat header "Summary" button)
     const summarizeChannel = async (serverId: string, channelId: string) => {
       const headers = await authHeaders()
       const res = await axios.post(
@@ -83,7 +75,6 @@ export const useAi = () => {
       return res.data as { summary: string; message_count: number; cached: boolean; generated_at: string }
     }
    
-    // Smart reply pills (above chat input) 
     const suggestReplies = async (params: {
       serverId?: string
       channelId?: string

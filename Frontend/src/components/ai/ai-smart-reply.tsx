@@ -24,7 +24,6 @@ export const AiSmartReplies = ({
   const { suggestReplies } = useAi()
 
   useEffect(() => {
-    // Reset when channel changes
     setSuggestions([])
     fetchedRef.current = false
   }, [channelId, conversationId])

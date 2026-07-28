@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react"
 import { useOutletContext } from "react-router-dom"
-import { useAllServers } from "@/hooks/server/use-all-servers"
 import { useAi } from "@/hooks/ai/use-ai"
 import { useFileUpload } from "@/hooks/ai/use-file-upload"
 import { useRagScope } from "@/hooks/ai/use-rag-scope"
@@ -8,7 +7,6 @@ import { CommuneAiHeader } from "@/components/ai/commune-ai-header"
 import { MessageBubble } from "@/components/ai/message-bubble"
 import { TypingIndicator } from "@/components/typing-indicator"
 import { ChatInput } from "@/components/ai/chat-input"
-import { SendToModal } from "@/components/ai/send-to-modal"
 import type { ChatMessage, HistoryMessage } from "@/ai-types/commune-ai"
 import type { Profile } from "@/hooks/profile/use-currentProfile"
 
@@ -21,18 +19,16 @@ const WELCOME_MESSAGE: ChatMessage = {
 
 export const CommuneAiPage = () => {
   const profile = useOutletContext<Profile>()
-  const { data: servers } = useAllServers()
   const { communeAiChat } = useAi()
 
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
-  const [sendTarget, setSendTarget] = useState<string | null>(null)
 
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const { pendingMedia, uploadProgress, uploading, handleFile, clearMedia } = useFileUpload()
-  const { selectedServerId, selectedChannelId, indexing, ragEnabled, selectServer, selectChannel } = useRagScope(setMessages)
+  const { selectedServerId, selectedChannelId} = useRagScope(setMessages)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -100,23 +96,13 @@ export const CommuneAiPage = () => {
 
   return (
     <div className="flex flex-col pl-18 h-screen bg-[#313338]">
-      <CommuneAiHeader
-        servers={servers}
-        selectedServerId={selectedServerId}
-        selectedChannelId={selectedChannelId}
-        ragEnabled={ragEnabled}
-        indexing={indexing}
-        onSelectServer={selectServer}
-        onSelectChannel={selectChannel}
-      />
-
+      <CommuneAiHeader/>
       <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5">
         {messages.map(msg => (
           <MessageBubble
             key={msg.id}
             msg={msg}
             profile={profile}
-            onSend={setSendTarget}
           />
         ))}
         {loading && <TypingIndicator />}
@@ -134,14 +120,6 @@ export const CommuneAiPage = () => {
         onFileSelect={handleFile}
         onClearMedia={clearMedia}
       />
-
-      {sendTarget && profile && (
-        <SendToModal
-          text={sendTarget}
-          profile={profile}
-          onClose={() => setSendTarget(null)}
-        />
-      )}
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Copy, Check, CornerUpRight, Film } from "lucide-react"
+import { Copy, Check, Film } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { renderMarkdown } from "@/lib/render-markdown"
 import { UserAvatar } from "@/components/user-avatar"
@@ -10,7 +10,6 @@ import type { Profile } from "@/hooks/profile/use-currentProfile"
 interface MessageBubbleProps {
   msg: ChatMessage
   profile: Profile
-  onSend: (text: string) => void
 }
 
 const AiIcon = () => (
@@ -23,7 +22,7 @@ const AiIcon = () => (
   </div>
 )
 
-export const MessageBubble = ({ msg, profile, onSend }: MessageBubbleProps) => {
+export const MessageBubble = ({ msg, profile }: MessageBubbleProps) => {
   const [copied, setCopied] = useState(false)
   const isUser = msg.role === "user"
 
@@ -104,19 +103,6 @@ export const MessageBubble = ({ msg, profile, onSend }: MessageBubbleProps) => {
                   : <Copy className="w-3 h-3" />
                 }
                 {copied ? "Copied" : "Copy"}
-              </button>
-            </ActionTooltip>
-
-            <span className="text-zinc-700 text-xs">·</span>
-
-            <ActionTooltip label="Send to channel or DM" side="bottom">
-              <button
-                onClick={() => onSend(msg.text)}
-                className="flex items-center gap-1 text-[11px] text-zinc-500
-                  hover:text-indigo-400 transition"
-              >
-                <CornerUpRight className="w-3 h-3" />
-                Send
               </button>
             </ActionTooltip>
           </div>
