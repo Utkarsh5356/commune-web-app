@@ -14,7 +14,7 @@ export const HomeContent = () => {
     if (!invite) return
     setLoading(true)
     setError("")
-    const code = invite.slice(22,invite.length)
+    const code = invite.slice(35,invite.length)
     navigate(`/${code}`)
   }
 
