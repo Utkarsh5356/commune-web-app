@@ -12,7 +12,7 @@ import { SSOcallback } from "./pages/sso-callback"
 
 function App() {
   return (
-   <div className="min-h-screen">
+   <div className="bg-[#2b2c2e] min-h-screen">
      <Routes>
       <Route path={"/"} element={<Signin/>}/>
       <Route path={"/signup"} element={<Signup/>}/>
