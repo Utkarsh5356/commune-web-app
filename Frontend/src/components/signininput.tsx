@@ -20,7 +20,7 @@ export default function SignInInput() {
   const navigate = useNavigate()
 
   if (isSignedIn) { navigate("/channels/@me"); return }
-  if (!isLoaded) return <Loader />
+  if (!isLoaded) return <div className="bg-[#2b2c2e] h-screen w-screen flex justify-center items-center"><Loader/></div>
 
   async function submit() {
     if (!isLoaded) return null
